@@ -6,10 +6,12 @@
   "license": "GPL-3.0-or-later",
   "author": "andlo",
   "name": "Enhedskonverter",
-  "description": "Lokal, offline enhedskonvertering - ingen cloud-afhængighed, ingen API-nøgle. Understøtter i øjeblikket kun længde/afstand; flere kategorier er planlagt.",
+  "description": "Lokal, offline enhedskonvertering - ingen cloud-afhængighed, ingen API-nøgle. Dækker længde, masse, temperatur, tid, hastighed, areal, volumen, vinkel, densitet, tryk, kraft, energi, effekt, moment, acceleration, koncentration, computer og flow.",
   "examples": [
     "konverter 10 centimeter til tommer",
-    "hvor mange fod er 2 meter"
+    "hvor mange fod er 2 meter",
+    "konverter 100 celsius til fahrenheit",
+    "hvor mange kilogram er 2 ton"
   ],
   "tags": [
     "utility",

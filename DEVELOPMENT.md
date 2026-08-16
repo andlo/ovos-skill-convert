@@ -20,25 +20,51 @@ math independent of the skill/bus layer.
 
 ## Adding a new unit category
 
-This project follows the same review-before-implementation pattern as
-the rest of the OVOS work here: **propose the alias table, get it
-checked, then commit it** - don't add a full category unreviewed.
+As of `0.0.2`, 18 of the 21 original categories are done (see README
+"Status"). What's left is Light (blocked on `pint` lacking foot-candle/
+phot units - would need custom unit definitions) and Custom (doesn't
+map onto a voice interface, likely permanently skipped).
 
-1. Pick the category (e.g. "mass") and list the units you want spoken
-   support for, with their `pint` unit strings
-   (see [pint's default unit list](https://github.com/hgrecco/pint/blob/master/pint/default_en.txt)).
-2. Draft the `UNIT_ALIASES["mass"]` entry for `en-us` first - spoken
-   forms (singular/plural/symbol) mapped to the pint string.
-3. Draft the Danish (`da-dk`) equivalent **as a structural translation,
-   not a literal one** - watch for false-friend traps like the
-   Danish "mil" vs English "mile" case documented in `__init__.py`.
-   When in doubt about whether a Danish unit name is truly equivalent
-   to its English counterpart, flag it rather than guessing.
-4. Bring both tables here for review before wiring them into the
-   skill.
-5. Once agreed, add the category to `UNIT_ALIASES`, add a
-   `test_resolve_unit_*` case per language, and confirm
-   `pytest tests/ -v` still passes.
+The process below is how the existing categories were built, and
+applies to any future one (a new Light approach, a category split more
+finely, etc):
+
+1. Pick the category and list the units you want spoken support for.
+2. **Verify every candidate pint unit string actually resolves**,
+   before writing a single alias - don't trust memory or docs. This
+   caught several real mistakes while building the current categories
+   (`cfm` silently parsing as centi-fermi; `us_ton`/`us_gallon` not
+   existing under those exact names; `foot_candle` not existing at
+   all in this pint version):
+   ```python
+   import pint
+   u = pint.UnitRegistry()
+   for candidate in ["kg", "lb", "metric_ton", "..."]:
+       try:
+           print("OK", candidate, u(candidate).units)
+       except Exception as e:
+           print("FAIL", candidate, e)
+   ```
+3. Draft the `UNIT_ALIASES["<category>"]["en-us"]` entry - spoken
+   forms (singular/plural/symbol) mapped to the verified pint string.
+4. Draft the Danish (`da-dk`) equivalent **as a structural translation,
+   not a literal one** - actively look for false-friend traps like the
+   ones in the README's table (Danish "ton"/"pund"/"hk" all needed
+   different handling than a literal translation would give). A good
+   check: does this Danish word's real-world value actually equal the
+   English unit it superficially resembles? If unsure, omit it rather
+   than guess - an omitted unit just doesn't work yet; a wrongly
+   mapped one gives a confidently wrong answer.
+5. Check for **cross-category collisions** in the same language -
+   `_build_merged_aliases()` will raise at import time if two
+   categories claim the same alias with different meanings, but it's
+   worth deliberately checking short/symbol-like aliases (single
+   letters, common abbreviations) against every other category before
+   adding them, not just relying on the exception to catch it.
+6. Add `test_resolve_unit_*` / `test_resolve_unit_across_categories`
+   cases per language, and a `test_conversion.py` case for anything
+   with a real numeric trap (offset units, two similarly-named but
+   different-valued units). Confirm `pytest tests/ -v` still passes.
 
 ## Live bus testing
 
