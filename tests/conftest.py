@@ -25,4 +25,5 @@ def skill(monkeypatch):
     monkeypatch.setattr(UnitConverter, "lang", "en-us", raising=False)
     s.res_dir = str(Path(__file__).resolve().parents[1])  # repo root, holds locale/
     s._lang_resources = {}  # OVOSSkill.resources' internal per-language cache
+    s._last_quantity = None  # follow-up conversion context, see initialize()
     return s

@@ -43,6 +43,38 @@ pip install ovos-skill-convert
 "hvor mange fod er 2 meter"               (Danish)
 ```
 
+### Follow-up conversions ("what is that in meters?")
+
+The skill listens for a number+unit spoken by *any* skill (not just
+itself) and remembers the last one for 60 seconds, so a follow-up
+works without repeating the value:
+
+```
+Other skill: "the distance to the Moon is 384400 kilometers"
+You:         "what is that in miles"
+Skill:       "384400.0 kilometers is 238855.0863 miles"
+```
+
+This also chains off the skill's own results:
+```
+You:   "convert 10 centimeters to inches"
+Skill: "10 centimeters is 3.937 inches"
+You:   "and what is that in feet"
+Skill: "3.937 inches is 0.3281 feet"
+```
+
+If nothing recent was heard, it says so rather than guessing. See the
+module docstring in `__init__.py` ("FOLLOW-UP CONVERSION") for the
+known limitations of this heuristic (digit-written numbers only, no
+scientific notation, locale-guessed decimal separator).
+
+**Known rough edge (pre-existing, not new to this feature):** whole
+numbers are spoken with a trailing ".0" (e.g. "384400.0 kilometers")
+because Python's default float formatting is used as-is in dialog
+rendering, with no "is this actually a whole number" cleanup. Not
+fixed here to keep this change scoped to the follow-up feature itself
+- worth a small dedicated fix later.
+
 ## Status
 
 **Implemented (18 categories, ~300 verified aliases across en-us +
