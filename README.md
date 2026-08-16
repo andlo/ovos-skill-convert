@@ -8,9 +8,11 @@ dependency, no API key. Conversion math is done with
 [![Tests](https://github.com/andlo/ovos-skill-convert/actions/workflows/test.yml/badge.svg)](https://github.com/andlo/ovos-skill-convert/actions/workflows/test.yml)
 [![PyPI version](https://img.shields.io/pypi/v/ovos-skill-convert.svg)](https://pypi.org/project/ovos-skill-convert/)
 
-> **This is an early-stage scaffold (0.0.x).** 18 of 21 categories from
-> the original brief are wired up. It's not ready for the OVOS Skill
-> Store yet - see "Status" below.
+> **This is an early-stage scaffold (0.0.x).** 19 of 21 categories from
+> the original brief are wired up in English and Danish; 6 more
+> languages have a first machine-translated pass (see "Status" -
+> quality bar is lower than en-us/da-dk for those). Not ready for the
+> OVOS Skill Store yet.
 
 ## Why this exists
 
@@ -77,26 +79,37 @@ fixed here to keep this change scoped to the follow-up feature itself
 
 ## Status
 
-**Implemented (18 categories, ~300 verified aliases across en-us +
-da-dk):** length, mass, temperature, time, speed, area, volume,
-volume_dry (en-us only), angle, density, pressure, force, energy,
-power, torque, acceleration, concentration, computer, flow.
+**Categories (19 of 21):** length, mass, temperature, time, speed,
+area, volume, volume_dry (en-us only), angle, density, pressure,
+force, energy, power, torque, acceleration, concentration, computer,
+flow, light. **Deliberately not implemented:** "Custom" (the original
+program's user-defined-unit tab - doesn't map onto a voice interface).
 
-**Deliberately not implemented:**
-- **Light** - this version of `pint` has no foot-candle/phot units,
-  and lumen/lux/candela are three different dimensions that aren't
-  directly interconvertible, so there's nothing meaningful to build
-  without adding custom unit definitions.
-- **Custom** - the original program's user-defined-unit tab. Doesn't
-  map onto a voice interface.
+**Light** was added after initially being written off entirely: `pint`
+has no built-in foot-candle, but illuminance (lux vs foot-candle) *is*
+a single interconvertible dimension, unlike luminous flux (lumen) or
+intensity (candela) - a one-line custom unit definition
+(`UREG.define("foot_candle = lumen / foot ** 2 = fc")`) was enough to
+cover it. Lumen/candela conversions remain out of scope.
 
-Every unit string in `locale/en-us/unit_aliases.json` was checked
-against the installed `pint` registry before being added (see
-`DEVELOPMENT.md` for the verification method) - none of it is guessed.
+**Languages:**
+
+| Language | Confidence |
+|---|---|
+| `en-us` | Reference implementation, ~300 aliases, verified against `pint` unit-by-unit |
+| `da-dk` | Native-speaker level - every false-friend trap actively hunted, not just translated |
+| `de-de`, `es-es`, `fr-fr`, `it-it`, `nl-nl`, `pt-pt` | **First machine-translated pass, NOT native-speaker verified.** Same category structure as en-us, smaller alias sets (~80 each), the highest-confidence false-friend patterns applied by generalizing from the da-dk findings (see below) - but not fact-checked with the same rigor. Treat as a starting point; each file's `"_notes"` key flags what's unverified. |
+
+Every unit string used anywhere was checked against the installed
+`pint` registry before being added (see `DEVELOPMENT.md` for the
+verification method) - none of it is guessed, even in the lower-
+confidence languages. What's *not* verified in the new 6 is whether
+the chosen alias words match how people actually speak in each
+language - that needs native-speaker review.
 
 Unit aliases live in `locale/<lang>/unit_aliases.json` per language,
 not hardcoded in Python - see "Adding a new unit category or language"
-in `DEVELOPMENT.md` for how to add a new language via the same
+in `DEVELOPMENT.md` for how to add or improve a language via the same
 `ovos-localize` workflow used for the rest of this project's locale
 content.
 
@@ -116,11 +129,26 @@ real-world value - each is called out in that language's
 | bare "g" | could mean gram or "free fall"/gravity | Only ever aliased to gram; acceleration uses "standard gravity"/"free fall" |
 | bare "grader"/"degrees" (da/en) | could mean angle or temperature | Defaults to angle; temperature requires naming celsius/fahrenheit/kelvin explicitly |
 | `oz` vs `fluid_ounce` | same English word, different dimension (mass vs volume) | Kept as separate keys, never merged |
+| French "livre" | harmless if just omitted | **Wasn't** - fuzzy-matched "litre" (liter) at exactly the 0.80 threshold. Omitting a word from the alias table only blocks *exact* matching, not fuzzy matching or the raw-pint fallback below. |
+| Dutch "pond" | harmless if just omitted | **Wasn't** - `pint` itself defines `pond` as an unrelated CGS force unit (gram-force), so the raw-pint fallback silently accepted it |
+| Danish "mil" | harmless if just omitted | Resolves via the raw-pint fallback too - `pint` has "mil" as the dimensionless milli- SI prefix, so it doesn't crash, it just produces a confusing `DimensionalityError` instead of "I don't understand" |
 
-A startup consistency check (`_build_merged_aliases()`) also raises an
-error at import time if any two categories ever define the same spoken
-alias with two *different* target units for the same language - so a
-future collision like these can't ship silently.
+The last three rows are the same *kind* of bug as the others, but a
+category ahead: a word can be **correctly excluded from the alias
+table** and *still* resolve to something wrong, via fuzzy matching or
+the pint-string fallback. This is now handled with an explicit
+per-language `"_never_map"` list in each `unit_aliases.json` - words
+that must never resolve to anything, checked *before* either of those
+two paths, not just absent from the main table. Every flagged word in
+every language above (French/German/Italian/Portuguese "mile"-words,
+"pound"-words, etc.) is in its language's `_never_map`, whether or not
+it was actually provably dangerous - cheap insurance, and it documents
+intent even where nothing currently breaks.
+
+A startup consistency check (`_load_unit_aliases_from_disk()`) also
+raises an error at import time if any two categories ever define the
+same spoken alias with two *different* target units for the same
+language - so a future collision like these can't ship silently.
 
 ## Architecture: why NOT Common Query
 
@@ -136,11 +164,14 @@ here.
 
 ## Unit resolution strategy
 
-Spoken unit text is resolved in three steps:
-1. Exact match against the current language's alias table.
-2. Fuzzy match (`match_one`, threshold 0.8) against that same table -
+Spoken unit text is resolved in four steps:
+1. Check the language's `_never_map` first - if the word is on it,
+   stop immediately and return "not understood", regardless of what
+   the later steps would have matched.
+2. Exact match against the current language's alias table.
+3. Fuzzy match (`match_one`, threshold 0.8) against that same table -
    covers minor STT mishearings.
-3. Fallback: try the raw text directly against `pint` (covers someone
+4. Fallback: try the raw text directly against `pint` (covers someone
    literally saying a unit symbol like "cm").
 
 If none of those resolve, the skill says so rather than guessing.

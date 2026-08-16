@@ -1,0 +1,3 @@
+converti {value} {from_unit} in {to_unit}
+quanti {to_unit} sono {value} {from_unit}
+cosa sono {value} {from_unit} in {to_unit}

@@ -1,0 +1,3 @@
+converte {value} {from_unit} para {to_unit}
+quantos {to_unit} são {value} {from_unit}
+o que é {value} {from_unit} em {to_unit}

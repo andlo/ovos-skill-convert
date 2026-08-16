@@ -1,0 +1,132 @@
+{
+  "_notes": [
+    "Machine-translated first pass, NOT native-speaker verified the way da-dk is - treat as a starting point, review before considering it 'done'.",
+    "'Tonne' maps to metric_ton (matches everyday German usage, same pattern as Danish 'ton').",
+    "'Pfund' is intentionally NOT mapped - like Danish 'pund', German 'Pfund' colloquially means exactly 500 g, not the imperial pound (453.6 g).",
+    "'Meile' is intentionally NOT mapped - modern German has no strong everyday convention for this word; too risky to guess (same caution as Danish 'mil').",
+    "'PS' (Pferdestärke) maps to metric_horsepower, NOT bare 'horsepower' - same pattern as Danish 'hk'."
+  ],
+  "_never_map": [
+    "meile",
+    "pfund"
+  ],
+  "length": {
+    "zentimeter": "cm",
+    "cm": "cm",
+    "millimeter": "mm",
+    "mm": "mm",
+    "meter": "m",
+    "m": "m",
+    "kilometer": "km",
+    "km": "km",
+    "zoll": "in",
+    "fuss": "ft",
+    "fuß": "ft"
+  },
+  "mass": {
+    "gramm": "g",
+    "g": "g",
+    "milligramm": "mg",
+    "mg": "mg",
+    "kilogramm": "kg",
+    "kilo": "kg",
+    "kg": "kg",
+    "tonne": "metric_ton",
+    "tonnen": "metric_ton"
+  },
+  "temperature": {
+    "celsius": "degC",
+    "fahrenheit": "degF",
+    "kelvin": "kelvin"
+  },
+  "time": {
+    "sekunde": "second",
+    "sekunden": "second",
+    "minute": "minute",
+    "minuten": "minute",
+    "stunde": "hour",
+    "stunden": "hour",
+    "tag": "day",
+    "tage": "day",
+    "woche": "week",
+    "wochen": "week",
+    "jahr": "year",
+    "jahre": "year"
+  },
+  "speed": {
+    "meter pro sekunde": "m/s",
+    "kilometer pro stunde": "km/h",
+    "knoten": "knot"
+  },
+  "area": {
+    "quadratmeter": "m**2",
+    "quadratkilometer": "km**2",
+    "hektar": "hectare"
+  },
+  "volume": {
+    "liter": "liter",
+    "milliliter": "milliliter",
+    "deziliter": "deciliter",
+    "esslöffel": "tablespoon",
+    "teelöffel": "teaspoon"
+  },
+  "angle": {
+    "grad": "degree",
+    "radiant": "radian"
+  },
+  "density": {
+    "kilogramm pro kubikmeter": "kg/m**3",
+    "gramm pro kubikzentimeter": "g/cm**3",
+    "gramm pro milliliter": "g/mL"
+  },
+  "pressure": {
+    "pascal": "pascal",
+    "kilopascal": "kPa",
+    "bar": "bar",
+    "atmosphäre": "atm"
+  },
+  "force": {
+    "newton": "newton"
+  },
+  "energy": {
+    "joule": "joule",
+    "kilojoule": "kilojoule",
+    "kalorie": "calorie",
+    "kalorien": "calorie",
+    "kilokalorie": "kilocalorie",
+    "kilokalorien": "kilocalorie",
+    "kilowattstunde": "kilowatt_hour"
+  },
+  "power": {
+    "watt": "watt",
+    "kilowatt": "kilowatt",
+    "ps": "metric_horsepower",
+    "pferdestärke": "metric_horsepower"
+  },
+  "torque": {
+    "newtonmeter": "newton*meter"
+  },
+  "acceleration": {
+    "meter pro sekunde zum quadrat": "m/s**2",
+    "erdbeschleunigung": "standard_gravity"
+  },
+  "concentration": {
+    "mol pro liter": "mol/L",
+    "prozent": "percent"
+  },
+  "computer": {
+    "bit": "bit",
+    "byte": "byte",
+    "kilobyte": "kilobyte",
+    "megabyte": "megabyte",
+    "gigabyte": "gigabyte",
+    "terabyte": "terabyte"
+  },
+  "flow": {
+    "liter pro minute": "liter/minute",
+    "kubikmeter pro stunde": "m**3/hour"
+  },
+  "light": {
+    "lux": "lux"
+  }
+}

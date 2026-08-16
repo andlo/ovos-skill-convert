@@ -1,0 +1,3 @@
+converteer {value} {from_unit} naar {to_unit}
+hoeveel {to_unit} is {value} {from_unit}
+wat is {value} {from_unit} in {to_unit}

@@ -7,6 +7,7 @@
     "- 'hk'/'hestekraft' maps to metric_horsepower, NOT bare 'horsepower' (~1.4% different).",
     "- bare 'grader' only means angle (degree), never temperature - 'celsius'/'fahrenheit'/'kelvin' must be said explicitly."
   ],
+  "_never_map": ["mil", "pund"],
   "length": {
     "centimeter": "cm",
     "cm": "cm",
@@ -134,5 +135,8 @@
   "flow": {
     "liter per minut": "liter/minute",
     "kubikmeter per time": "m**3/hour"
+  },
+  "light": {
+    "lux": "lux"
   }
 }

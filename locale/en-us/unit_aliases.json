@@ -247,5 +247,11 @@
     "cubic meters per hour": "m**3/hour",
     "cubic foot per minute": "ft**3/minute",
     "cubic feet per minute": "ft**3/minute"
+  },
+  "light": {
+    "lux": "lux",
+    "foot-candle": "foot_candle",
+    "foot candle": "foot_candle",
+    "foot candles": "foot_candle"
   }
 }

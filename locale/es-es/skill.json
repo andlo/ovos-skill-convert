@@ -1,0 +1,21 @@
+{
+  "skill_id": "ovos-skill-convert.andlo",
+  "source": "https://github.com/andlo/ovos-skill-convert",
+  "package_name": "ovos-skill-convert",
+  "pip_spec": "ovos-skill-convert",
+  "license": "GPL-3.0-or-later",
+  "author": "andlo",
+  "name": "Conversor de unidades",
+  "description": "Conversión de unidades local y offline - sin dependencia de la nube, sin clave de API. Primer borrador con traducción automática, aún no verificado por un hablante nativo.",
+  "examples": [
+    "convierte 10 centímetros a pulgadas",
+    "cuántos pies son 2 metros"
+  ],
+  "tags": [
+    "utility",
+    "converter",
+    "units",
+    "measurement"
+  ],
+  "icon": "https://raw.githubusercontent.com/andlo/ovos-skill-convert/main/icon.png"
+}

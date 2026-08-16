@@ -1,0 +1,130 @@
+{
+  "_notes": [
+    "Machine-translated first pass, NOT native-speaker verified the way da-dk is - review before considering it 'done'.",
+    "'tonnellata' maps to metric_ton (standard Italian usage, matches Danish 'ton' pattern).",
+    "'libbra' is intentionally NOT mapped - lower confidence than the Danish/German/French/Dutch 'pound-word' cases, no strong everyday Italian convention found; left out rather than guessed either way.",
+    "'miglio' is intentionally NOT mapped - same caution as Danish 'mil'/German 'Meile'.",
+    "'cavallo vapore'/'CV' maps to metric_horsepower, NOT bare 'horsepower' - same pattern as Danish 'hk'."
+  ],
+  "_never_map": [
+    "miglio",
+    "libbra"
+  ],
+  "length": {
+    "centimetro": "cm",
+    "cm": "cm",
+    "millimetro": "mm",
+    "mm": "mm",
+    "metro": "m",
+    "m": "m",
+    "chilometro": "km",
+    "km": "km",
+    "pollice": "in",
+    "piede": "ft"
+  },
+  "mass": {
+    "grammo": "g",
+    "g": "g",
+    "milligrammo": "mg",
+    "mg": "mg",
+    "chilogrammo": "kg",
+    "chilo": "kg",
+    "kg": "kg",
+    "tonnellata": "metric_ton",
+    "tonnellate": "metric_ton"
+  },
+  "temperature": {
+    "celsius": "degC",
+    "fahrenheit": "degF",
+    "kelvin": "kelvin"
+  },
+  "time": {
+    "secondo": "second",
+    "secondi": "second",
+    "minuto": "minute",
+    "minuti": "minute",
+    "ora": "hour",
+    "ore": "hour",
+    "giorno": "day",
+    "giorni": "day",
+    "settimana": "week",
+    "settimane": "week",
+    "anno": "year",
+    "anni": "year"
+  },
+  "speed": {
+    "metro al secondo": "m/s",
+    "chilometro orario": "km/h",
+    "chilometri all'ora": "km/h",
+    "nodo": "knot"
+  },
+  "area": {
+    "metro quadrato": "m**2",
+    "chilometro quadrato": "km**2",
+    "ettaro": "hectare"
+  },
+  "volume": {
+    "litro": "liter",
+    "millilitro": "milliliter",
+    "decilitro": "deciliter",
+    "cucchiaio": "tablespoon",
+    "cucchiaino": "teaspoon"
+  },
+  "angle": {
+    "grado": "degree",
+    "radiante": "radian"
+  },
+  "density": {
+    "chilogrammo al metro cubo": "kg/m**3",
+    "grammo al centimetro cubo": "g/cm**3",
+    "grammo al millilitro": "g/mL"
+  },
+  "pressure": {
+    "pascal": "pascal",
+    "chilopascal": "kPa",
+    "bar": "bar",
+    "atmosfera": "atm"
+  },
+  "force": {
+    "newton": "newton"
+  },
+  "energy": {
+    "joule": "joule",
+    "chilojoule": "kilojoule",
+    "caloria": "calorie",
+    "chilocaloria": "kilocalorie",
+    "chilowattora": "kilowatt_hour"
+  },
+  "power": {
+    "watt": "watt",
+    "chilowatt": "kilowatt",
+    "cavallo vapore": "metric_horsepower",
+    "cv": "metric_horsepower"
+  },
+  "torque": {
+    "newton metro": "newton*meter"
+  },
+  "acceleration": {
+    "metro al secondo quadrato": "m/s**2",
+    "gravità": "standard_gravity"
+  },
+  "concentration": {
+    "mole al litro": "mol/L",
+    "percento": "percent"
+  },
+  "computer": {
+    "bit": "bit",
+    "byte": "byte",
+    "kilobyte": "kilobyte",
+    "megabyte": "megabyte",
+    "gigabyte": "gigabyte",
+    "terabyte": "terabyte"
+  },
+  "flow": {
+    "litro al minuto": "liter/minute",
+    "metro cubo all'ora": "m**3/hour"
+  },
+  "light": {
+    "lux": "lux"
+  }
+}

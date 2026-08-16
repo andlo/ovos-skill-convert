@@ -1,0 +1,129 @@
+{
+  "_notes": [
+    "Machine-translated first pass (Spain/Castilian usage assumed), NOT native-speaker verified the way da-dk is - review before considering it 'done'. Latin American Spanish varieties may need different choices, especially for 'libra'.",
+    "'tonelada' maps to metric_ton (standard in Spain, matches Danish 'ton' pattern).",
+    "'libra' is intentionally NOT mapped - not common in everyday Spain usage, and genuinely regional/ambiguous across Spanish-speaking countries (some Latin American countries use 'libra' close to the imperial pound); left out rather than guessed.",
+    "'milla' is intentionally NOT mapped - same caution as Danish 'mil'/German 'Meile'.",
+    "'caballo de vapor'/'CV' maps to metric_horsepower, NOT bare 'horsepower' - same pattern as Danish 'hk'."
+  ],
+  "_never_map": [
+    "milla",
+    "libra"
+  ],
+  "length": {
+    "centímetro": "cm",
+    "cm": "cm",
+    "milímetro": "mm",
+    "mm": "mm",
+    "metro": "m",
+    "m": "m",
+    "kilómetro": "km",
+    "km": "km",
+    "pulgada": "in",
+    "pie": "ft"
+  },
+  "mass": {
+    "gramo": "g",
+    "g": "g",
+    "miligramo": "mg",
+    "mg": "mg",
+    "kilogramo": "kg",
+    "kilo": "kg",
+    "kg": "kg",
+    "tonelada": "metric_ton",
+    "toneladas": "metric_ton"
+  },
+  "temperature": {
+    "celsius": "degC",
+    "fahrenheit": "degF",
+    "kelvin": "kelvin"
+  },
+  "time": {
+    "segundo": "second",
+    "segundos": "second",
+    "minuto": "minute",
+    "minutos": "minute",
+    "hora": "hour",
+    "horas": "hour",
+    "día": "day",
+    "días": "day",
+    "semana": "week",
+    "semanas": "week",
+    "año": "year",
+    "años": "year"
+  },
+  "speed": {
+    "metro por segundo": "m/s",
+    "kilómetro por hora": "km/h",
+    "nudo": "knot"
+  },
+  "area": {
+    "metro cuadrado": "m**2",
+    "kilómetro cuadrado": "km**2",
+    "hectárea": "hectare"
+  },
+  "volume": {
+    "litro": "liter",
+    "mililitro": "milliliter",
+    "decilitro": "deciliter",
+    "cucharada": "tablespoon",
+    "cucharadita": "teaspoon"
+  },
+  "angle": {
+    "grado": "degree",
+    "radián": "radian"
+  },
+  "density": {
+    "kilogramo por metro cúbico": "kg/m**3",
+    "gramo por centímetro cúbico": "g/cm**3",
+    "gramo por mililitro": "g/mL"
+  },
+  "pressure": {
+    "pascal": "pascal",
+    "kilopascal": "kPa",
+    "bar": "bar",
+    "atmósfera": "atm"
+  },
+  "force": {
+    "newton": "newton"
+  },
+  "energy": {
+    "julio": "joule",
+    "kilojulio": "kilojoule",
+    "caloría": "calorie",
+    "kilocaloría": "kilocalorie",
+    "kilovatio hora": "kilowatt_hour"
+  },
+  "power": {
+    "vatio": "watt",
+    "kilovatio": "kilowatt",
+    "caballo de vapor": "metric_horsepower",
+    "cv": "metric_horsepower"
+  },
+  "torque": {
+    "newton metro": "newton*meter"
+  },
+  "acceleration": {
+    "metro por segundo al cuadrado": "m/s**2",
+    "gravedad": "standard_gravity"
+  },
+  "concentration": {
+    "mol por litro": "mol/L",
+    "por ciento": "percent"
+  },
+  "computer": {
+    "bit": "bit",
+    "byte": "byte",
+    "kilobyte": "kilobyte",
+    "megabyte": "megabyte",
+    "gigabyte": "gigabyte",
+    "terabyte": "terabyte"
+  },
+  "flow": {
+    "litro por minuto": "liter/minute",
+    "metro cúbico por hora": "m**3/hour"
+  },
+  "light": {
+    "lux": "lux"
+  }
+}

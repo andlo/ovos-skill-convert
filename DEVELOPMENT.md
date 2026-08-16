@@ -32,10 +32,11 @@ project is validated:
 python -m ovos_localize.cli validate locale/<new-lang>
 ```
 
-As of `0.0.3`, 18 of the 21 original categories are done (see README
-"Status"). What's left is Light (blocked on `pint` lacking foot-candle/
-phot units - would need custom unit definitions) and Custom (doesn't
-map onto a voice interface, likely permanently skipped).
+As of `0.0.5`, 19 of the 21 original categories are done (see README
+"Status"), across 8 languages (en-us, da-dk native-speaker level; de-de,
+es-es, fr-fr, it-it, nl-nl, pt-pt as a first machine-translated pass,
+not yet native-speaker verified). What's left is Custom (doesn't map
+onto a voice interface, likely permanently skipped).
 
 The process below is how the existing categories were built, and
 applies to any future one (a new Light approach, a category split more
@@ -76,10 +77,38 @@ finely, a new language, etc):
    aliases (single letters, common abbreviations) against every other
    category in the file before adding them, not just relying on the
    exception to catch it.
-6. Add `test_resolve_unit_*` / `test_resolve_unit_across_categories`
+6. **Check that every intentionally-omitted false-friend word actually
+   stays unmapped** - don't assume "not in the alias table" is enough.
+   Fuzzy matching and the raw-pint fallback in `_resolve_unit()` can
+   both silently resolve a word you meant to exclude (this happened
+   for real: French "livre" fuzzy-matched "litre" at exactly the 0.8
+   threshold, and Dutch "pond" matched directly because `pint` itself
+   defines an unrelated `pond` force unit). Check each flagged word
+   like this before trusting an omission:
+   ```python
+   from ovos_utils.parse import match_one
+   import pint
+   u = pint.UnitRegistry()
+   match, score = match_one("livre", list(aliases.keys()))
+   print(match, score)          # is this >= 0.8?
+   try:
+       print(u("livre"))        # does pint itself define this?
+   except Exception:
+       print("pint: not defined")
+   ```
+   If either check comes back dangerous (or even just plausible), add
+   the word to that language's `"_never_map"` list in
+   `unit_aliases.json` - checked first in `_resolve_unit()`, before
+   either fuzzy matching or the pint fallback get a chance to run.
+   Adding words there even when nothing currently breaks is cheap
+   insurance against a future `pint` version defining something new.
+7. Add `test_resolve_unit_*` / `test_resolve_unit_across_categories`
    cases per language, and a `test_conversion.py` case for anything
    with a real numeric trap (offset units, two similarly-named but
-   different-valued units). Confirm `pytest tests/ -v` still passes.
+   different-valued units). Add a
+   `test_flagged_false_friend_words_stay_unmapped`-style case (see
+   `tests/test_i18n.py`) for anything added to `_never_map`. Confirm
+   `pytest tests/ -v` still passes.
 
 ## Live bus testing
 

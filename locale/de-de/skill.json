@@ -1,0 +1,21 @@
+{
+  "skill_id": "ovos-skill-convert.andlo",
+  "source": "https://github.com/andlo/ovos-skill-convert",
+  "package_name": "ovos-skill-convert",
+  "pip_spec": "ovos-skill-convert",
+  "license": "GPL-3.0-or-later",
+  "author": "andlo",
+  "name": "Einheitenumrechner",
+  "description": "Lokale, offline Einheitenumrechnung - keine Cloud-Abhängigkeit, kein API-Schlüssel. Erster maschinell übersetzter Entwurf, noch nicht von Muttersprachlern geprüft.",
+  "examples": [
+    "konvertiere 10 Zentimeter in Zoll",
+    "wie viele Fuß sind 2 Meter"
+  ],
+  "tags": [
+    "utility",
+    "converter",
+    "units",
+    "measurement"
+  ],
+  "icon": "https://raw.githubusercontent.com/andlo/ovos-skill-convert/main/icon.png"
+}

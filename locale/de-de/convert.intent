@@ -1,0 +1,4 @@
+konvertiere {value} {from_unit} in {to_unit}
+wandle {value} {from_unit} in {to_unit} um
+wie viele {to_unit} sind {value} {from_unit}
+was sind {value} {from_unit} in {to_unit}

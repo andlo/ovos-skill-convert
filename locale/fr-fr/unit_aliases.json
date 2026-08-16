@@ -1,0 +1,132 @@
+{
+  "_notes": [
+    "Machine-translated first pass, NOT native-speaker verified the way da-dk is - review before considering it 'done'.",
+    "'tonne' maps to metric_ton (standard French usage, matches Danish 'ton' pattern).",
+    "'livre' is intentionally NOT mapped - like Danish 'pund'/German 'Pfund', French 'livre' historically/colloquially means exactly 500 g, not the imperial pound (453.6 g).",
+    "'mille' is intentionally NOT mapped for length at all - it also means the NUMBER 'thousand' in French, a much more dangerous collision than the usual false-friend traps in this project. Left out entirely rather than risk it.",
+    "'cheval-vapeur'/'CV' maps to metric_horsepower, NOT bare 'horsepower' - same pattern as Danish 'hk'.",
+    "Computer sizes use French 'octet' (byte), not a borrowed 'byte' - kilo-octet/mega-octet/giga-octet/téraoctet, matching real French usage (Ko/Mo/Go/To), not a literal translation."
+  ],
+  "_never_map": [
+    "mille",
+    "livre"
+  ],
+  "length": {
+    "centimètre": "cm",
+    "cm": "cm",
+    "millimètre": "mm",
+    "mm": "mm",
+    "mètre": "m",
+    "m": "m",
+    "kilomètre": "km",
+    "km": "km",
+    "pouce": "in",
+    "pied": "ft"
+  },
+  "mass": {
+    "gramme": "g",
+    "g": "g",
+    "milligramme": "mg",
+    "mg": "mg",
+    "kilogramme": "kg",
+    "kilo": "kg",
+    "kg": "kg",
+    "tonne": "metric_ton",
+    "tonnes": "metric_ton"
+  },
+  "temperature": {
+    "celsius": "degC",
+    "fahrenheit": "degF",
+    "kelvin": "kelvin"
+  },
+  "time": {
+    "seconde": "second",
+    "secondes": "second",
+    "minute": "minute",
+    "minutes": "minute",
+    "heure": "hour",
+    "heures": "hour",
+    "jour": "day",
+    "jours": "day",
+    "semaine": "week",
+    "semaines": "week",
+    "an": "year",
+    "année": "year",
+    "ans": "year"
+  },
+  "speed": {
+    "mètre par seconde": "m/s",
+    "kilomètre par heure": "km/h",
+    "nœud": "knot"
+  },
+  "area": {
+    "mètre carré": "m**2",
+    "kilomètre carré": "km**2",
+    "hectare": "hectare"
+  },
+  "volume": {
+    "litre": "liter",
+    "millilitre": "milliliter",
+    "décilitre": "deciliter",
+    "cuillère à soupe": "tablespoon",
+    "cuillère à café": "teaspoon"
+  },
+  "angle": {
+    "degré": "degree",
+    "radian": "radian"
+  },
+  "density": {
+    "kilogramme par mètre cube": "kg/m**3",
+    "gramme par centimètre cube": "g/cm**3",
+    "gramme par millilitre": "g/mL"
+  },
+  "pressure": {
+    "pascal": "pascal",
+    "kilopascal": "kPa",
+    "bar": "bar",
+    "atmosphère": "atm"
+  },
+  "force": {
+    "newton": "newton"
+  },
+  "energy": {
+    "joule": "joule",
+    "kilojoule": "kilojoule",
+    "calorie": "calorie",
+    "kilocalorie": "kilocalorie",
+    "kilowattheure": "kilowatt_hour"
+  },
+  "power": {
+    "watt": "watt",
+    "kilowatt": "kilowatt",
+    "cheval-vapeur": "metric_horsepower",
+    "cv": "metric_horsepower"
+  },
+  "torque": {
+    "newton mètre": "newton*meter"
+  },
+  "acceleration": {
+    "mètre par seconde carrée": "m/s**2",
+    "gravité": "standard_gravity",
+    "pesanteur": "standard_gravity"
+  },
+  "concentration": {
+    "mole par litre": "mol/L",
+    "pour cent": "percent"
+  },
+  "computer": {
+    "bit": "bit",
+    "octet": "byte",
+    "kilooctet": "kilobyte",
+    "mégaoctet": "megabyte",
+    "gigaoctet": "gigabyte",
+    "téraoctet": "terabyte"
+  },
+  "flow": {
+    "litre par minute": "liter/minute",
+    "mètre cube par heure": "m**3/hour"
+  },
+  "light": {
+    "lux": "lux"
+  }
+}

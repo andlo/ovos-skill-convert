@@ -1,0 +1,128 @@
+{
+  "_notes": [
+    "Machine-translated first pass, NOT native-speaker verified the way da-dk is - review before considering it 'done'.",
+    "'ton' maps to metric_ton - matches everyday Dutch usage, exactly the same word AND same trap as Danish 'ton'.",
+    "'pond' is intentionally NOT mapped - like Danish 'pund'/German 'Pfund', Dutch 'pond' colloquially means exactly 500 g, not the imperial pound (453.6 g).",
+    "'mijl' is intentionally NOT mapped - same caution as Danish 'mil'/German 'Meile'.",
+    "'pk' (paardenkracht) maps to metric_horsepower, NOT bare 'horsepower' - same pattern as Danish 'hk'."
+  ],
+  "_never_map": [
+    "mijl",
+    "pond"
+  ],
+  "length": {
+    "centimeter": "cm",
+    "cm": "cm",
+    "millimeter": "mm",
+    "mm": "mm",
+    "meter": "m",
+    "m": "m",
+    "kilometer": "km",
+    "km": "km",
+    "inch": "in",
+    "voet": "ft"
+  },
+  "mass": {
+    "gram": "g",
+    "g": "g",
+    "milligram": "mg",
+    "mg": "mg",
+    "kilogram": "kg",
+    "kilo": "kg",
+    "kg": "kg",
+    "ton": "metric_ton"
+  },
+  "temperature": {
+    "celsius": "degC",
+    "fahrenheit": "degF",
+    "kelvin": "kelvin"
+  },
+  "time": {
+    "seconde": "second",
+    "seconden": "second",
+    "minuut": "minute",
+    "minuten": "minute",
+    "uur": "hour",
+    "uren": "hour",
+    "dag": "day",
+    "dagen": "day",
+    "week": "week",
+    "weken": "week",
+    "jaar": "year",
+    "jaren": "year"
+  },
+  "speed": {
+    "meter per seconde": "m/s",
+    "kilometer per uur": "km/h",
+    "knoop": "knot"
+  },
+  "area": {
+    "vierkante meter": "m**2",
+    "vierkante kilometer": "km**2",
+    "hectare": "hectare"
+  },
+  "volume": {
+    "liter": "liter",
+    "milliliter": "milliliter",
+    "deciliter": "deciliter",
+    "eetlepel": "tablespoon",
+    "theelepel": "teaspoon"
+  },
+  "angle": {
+    "graad": "degree",
+    "radiaal": "radian"
+  },
+  "density": {
+    "kilogram per kubieke meter": "kg/m**3",
+    "gram per kubieke centimeter": "g/cm**3",
+    "gram per milliliter": "g/mL"
+  },
+  "pressure": {
+    "pascal": "pascal",
+    "kilopascal": "kPa",
+    "bar": "bar",
+    "atmosfeer": "atm"
+  },
+  "force": {
+    "newton": "newton"
+  },
+  "energy": {
+    "joule": "joule",
+    "kilojoule": "kilojoule",
+    "calorie": "calorie",
+    "kilocalorie": "kilocalorie",
+    "kilowattuur": "kilowatt_hour"
+  },
+  "power": {
+    "watt": "watt",
+    "kilowatt": "kilowatt",
+    "pk": "metric_horsepower",
+    "paardenkracht": "metric_horsepower"
+  },
+  "torque": {
+    "newtonmeter": "newton*meter"
+  },
+  "acceleration": {
+    "meter per seconde kwadraat": "m/s**2",
+    "zwaartekracht": "standard_gravity"
+  },
+  "concentration": {
+    "mol per liter": "mol/L",
+    "procent": "percent"
+  },
+  "computer": {
+    "bit": "bit",
+    "byte": "byte",
+    "kilobyte": "kilobyte",
+    "megabyte": "megabyte",
+    "gigabyte": "gigabyte",
+    "terabyte": "terabyte"
+  },
+  "flow": {
+    "liter per minuut": "liter/minute",
+    "kubieke meter per uur": "m**3/hour"
+  },
+  "light": {
+    "lux": "lux"
+  }
+}

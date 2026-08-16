@@ -33,11 +33,19 @@ structure and locale/da-dk/unit_aliases.json for the Danish false-
 friend decisions (both files carry their own "_notes" key explaining
 what to watch for before editing).
 
-18 of the 21 categories from the original brief are implemented. Two
-are deliberately NOT: "Light" (this pint version has no foot-candle/
-phot units, and lumen/lux/candela are three different dimensions that
-aren't directly interconvertible) and "Custom" (was the original
-program's user-defined-unit tab, doesn't map onto a voice interface).
+19 of the 21 categories from the original brief are implemented,
+including "Light" - added later than the others, once it turned out to
+be solvable after all: pint has no built-in foot-candle, but
+illuminance (lux vs foot-candle) is the SAME dimension
+([luminosity]/[length]**2), unlike luminous flux (lumen) or intensity
+(candela), which are genuinely different dimensions from illuminance
+and from each other. A single custom unit definition
+(UREG.define("foot_candle = lumen / foot ** 2 = fc")) is enough to
+cover the illuminance sub-case; lumen/candela conversions are still out
+of scope since there's nothing meaningful to convert them TO within
+this skill's categories. "Custom" (the original program's user-
+defined-unit tab) remains deliberately unimplemented - it doesn't map
+onto a voice interface at all.
 
 TEMPERATURE IS NOT SIMPLE MULTIPLICATION
 -----------------------------------------
@@ -93,6 +101,12 @@ import pint
 
 UREG = pint.UnitRegistry()
 
+# pint has no built-in foot-candle - illuminance (lux vs foot-candle)
+# IS a single interconvertible dimension though, unlike lumen/candela
+# (see module docstring's "Light" paragraph), so a custom definition
+# is enough to support it: 1 foot-candle = 1 lumen/ft^2 by definition.
+UREG.define("foot_candle = lumen / foot ** 2 = fc")
+
 UNIT_MATCH_THRESHOLD = 0.8
 CONTEXT_TTL_SECONDS = 60
 CONTEXT_MAX_UNIT_WORDS = 4  # longest multi-word alias we try matching after a number
@@ -106,21 +120,36 @@ LOCALE_DIR = SKILL_ROOT / "locale"
 def _load_unit_aliases_from_disk():
     """Reads locale/<lang>/unit_aliases.json for every language folder
     that has one, and flattens each into a single {alias: pint_unit}
-    table per language. Runtime resolution doesn't need to know which
-    category a word came from - pint's own DimensionalityError already
-    rejects nonsensical cross-category conversions (m -> kg etc), so
-    category is purely an organisational grouping inside the JSON, not
-    something the resolver needs.
+    table per language, plus a separate never-map set per language
+    (see "_never_map" below). Runtime resolution doesn't need to know
+    which category a word came from - pint's own DimensionalityError
+    already rejects nonsensical cross-category conversions (m -> kg
+    etc), so category is purely an organisational grouping inside the
+    JSON, not something the resolver needs.
 
     Raises at import time (rather than silently overwriting) if two
     categories in the same file define the same alias with DIFFERENT
     target units - that's a real ambiguity bug, not something to paper
-    over. Keys starting with "_" (e.g. "_notes") are skipped - they're
-    documentation, not category data.
+    over. Keys starting with "_" are reserved: "_notes" is
+    documentation (skipped entirely), "_never_map" is data (see below).
+
+    "_never_map" is a flat list of words that must NEVER resolve to
+    anything for that language, even via fuzzy matching or the raw-
+    pint-string fallback in _resolve_unit(). This exists because both
+    of those paths can silently defeat a deliberate omission: fuzzy
+    matching found French "livre" (deliberately NOT mapped - see that
+    file's "_notes") scoring 0.8 against "litre" (liter) purely from
+    edit-distance, and the raw-pint fallback accepted Dutch "pond"
+    directly because pint itself defines "pond" as an unrelated CGS
+    force unit (gram-force) - neither is the intended meaning. Omitting
+    a word from the alias table only blocks the FIRST resolution
+    path (exact match); "_never_map" is what actually makes "we
+    decided not to guess" hold for every path.
     """
     merged = {}
+    never_map = {}
     if not LOCALE_DIR.is_dir():
-        return merged
+        return merged, never_map
     for lang_dir in sorted(LOCALE_DIR.iterdir()):
         if not lang_dir.is_dir():
             continue
@@ -132,6 +161,8 @@ def _load_unit_aliases_from_disk():
 
         lang = lang_dir.name.lower()
         merged.setdefault(lang, {})
+        never_map.setdefault(lang, set())
+        never_map[lang].update(w.lower() for w in categories.get("_never_map", []))
         origin = {}  # alias -> category, for the collision error message
         for category, aliases in categories.items():
             if category.startswith("_"):
@@ -148,10 +179,10 @@ def _load_unit_aliases_from_disk():
                     )
                 merged[lang][alias] = pint_unit
                 origin[alias] = category
-    return merged
+    return merged, never_map
 
 
-MERGED_UNIT_ALIASES = _load_unit_aliases_from_disk()
+MERGED_UNIT_ALIASES, NEVER_MAP = _load_unit_aliases_from_disk()
 
 
 class UnitConverter(OVOSSkill):
@@ -168,15 +199,28 @@ class UnitConverter(OVOSSkill):
         lang = lang.lower()
         return MERGED_UNIT_ALIASES.get(lang) or MERGED_UNIT_ALIASES.get("en-us", {})
 
+    def _never_map_for(self, lang):
+        lang = lang.lower()
+        return NEVER_MAP.get(lang) or NEVER_MAP.get("en-us", set())
+
     def _resolve_unit(self, raw, lang):
         """Fuzzy-matches spoken unit text against the known alias
         table for the device language, falling back to trying the raw
         text directly against pint (covers e.g. someone literally
-        saying a unit symbol like 'cm')."""
+        saying a unit symbol like 'cm').
+
+        Checks the language's "_never_map" FIRST, before either of
+        those paths - both fuzzy matching and the raw-pint fallback
+        can otherwise silently resolve a word that was deliberately
+        left out of the alias table (see _load_unit_aliases_from_disk
+        docstring for the two real cases - "livre"/"litre" and
+        "pond" - that made this check necessary)."""
         if not raw:
             return None
-        aliases = self._aliases_for(lang)
         key = raw.strip().lower()
+        if key in self._never_map_for(lang):
+            return None
+        aliases = self._aliases_for(lang)
         if key in aliases:
             return aliases[key]
         match, score = match_one(key, list(aliases.keys()))

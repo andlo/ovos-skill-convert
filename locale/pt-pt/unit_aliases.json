@@ -1,0 +1,129 @@
+{
+  "_notes": [
+    "Machine-translated first pass (European Portuguese spelling assumed), NOT native-speaker verified the way da-dk is - review before considering it 'done'. Brazilian Portuguese uses different spelling for some words (e.g. 'quilômetro' not 'quilómetro') and may need separate treatment.",
+    "'tonelada' maps to metric_ton (standard usage, matches Danish 'ton' pattern).",
+    "'libra' is intentionally NOT mapped - not common in everyday Portugal usage; left out rather than guessed.",
+    "'milha' is intentionally NOT mapped - same caution as Danish 'mil'/German 'Meile'.",
+    "'cavalo-vapor'/'CV' maps to metric_horsepower, NOT bare 'horsepower' - same pattern as Danish 'hk'."
+  ],
+  "_never_map": [
+    "milha",
+    "libra"
+  ],
+  "length": {
+    "centímetro": "cm",
+    "cm": "cm",
+    "milímetro": "mm",
+    "mm": "mm",
+    "metro": "m",
+    "m": "m",
+    "quilómetro": "km",
+    "km": "km",
+    "polegada": "in",
+    "pé": "ft"
+  },
+  "mass": {
+    "grama": "g",
+    "g": "g",
+    "miligrama": "mg",
+    "mg": "mg",
+    "quilograma": "kg",
+    "quilo": "kg",
+    "kg": "kg",
+    "tonelada": "metric_ton",
+    "toneladas": "metric_ton"
+  },
+  "temperature": {
+    "celsius": "degC",
+    "fahrenheit": "degF",
+    "kelvin": "kelvin"
+  },
+  "time": {
+    "segundo": "second",
+    "segundos": "second",
+    "minuto": "minute",
+    "minutos": "minute",
+    "hora": "hour",
+    "horas": "hour",
+    "dia": "day",
+    "dias": "day",
+    "semana": "week",
+    "semanas": "week",
+    "ano": "year",
+    "anos": "year"
+  },
+  "speed": {
+    "metro por segundo": "m/s",
+    "quilómetro por hora": "km/h",
+    "nó": "knot"
+  },
+  "area": {
+    "metro quadrado": "m**2",
+    "quilómetro quadrado": "km**2",
+    "hectare": "hectare"
+  },
+  "volume": {
+    "litro": "liter",
+    "mililitro": "milliliter",
+    "decilitro": "deciliter",
+    "colher de sopa": "tablespoon",
+    "colher de chá": "teaspoon"
+  },
+  "angle": {
+    "grau": "degree",
+    "radiano": "radian"
+  },
+  "density": {
+    "quilograma por metro cúbico": "kg/m**3",
+    "grama por centímetro cúbico": "g/cm**3",
+    "grama por mililitro": "g/mL"
+  },
+  "pressure": {
+    "pascal": "pascal",
+    "quilopascal": "kPa",
+    "bar": "bar",
+    "atmosfera": "atm"
+  },
+  "force": {
+    "newton": "newton"
+  },
+  "energy": {
+    "joule": "joule",
+    "quilojoule": "kilojoule",
+    "caloria": "calorie",
+    "quilocaloria": "kilocalorie",
+    "quilowatt-hora": "kilowatt_hour"
+  },
+  "power": {
+    "watt": "watt",
+    "quilowatt": "kilowatt",
+    "cavalo-vapor": "metric_horsepower",
+    "cv": "metric_horsepower"
+  },
+  "torque": {
+    "newton metro": "newton*meter"
+  },
+  "acceleration": {
+    "metro por segundo ao quadrado": "m/s**2",
+    "gravidade": "standard_gravity"
+  },
+  "concentration": {
+    "mole por litro": "mol/L",
+    "por cento": "percent"
+  },
+  "computer": {
+    "bit": "bit",
+    "byte": "byte",
+    "kilobyte": "kilobyte",
+    "megabyte": "megabyte",
+    "gigabyte": "gigabyte",
+    "terabyte": "terabyte"
+  },
+  "flow": {
+    "litro por minuto": "liter/minute",
+    "metro cúbico por hora": "m**3/hour"
+  },
+  "light": {
+    "lux": "lux"
+  }
+}
