@@ -70,13 +70,6 @@ module docstring in `__init__.py` ("FOLLOW-UP CONVERSION") for the
 known limitations of this heuristic (digit-written numbers only, no
 scientific notation, locale-guessed decimal separator).
 
-**Known rough edge (pre-existing, not new to this feature):** whole
-numbers are spoken with a trailing ".0" (e.g. "384400.0 kilometers")
-because Python's default float formatting is used as-is in dialog
-rendering, with no "is this actually a whole number" cleanup. Not
-fixed here to keep this change scoped to the follow-up feature itself
-- worth a small dedicated fix later.
-
 ## Status
 
 **Categories (19 of 21):** length, mass, temperature, time, speed,
