@@ -18,16 +18,28 @@ match, unknown/empty input, the deliberate Danish "mil" non-mapping).
 `tests/test_conversion.py` sanity-checks the actual `pint` conversion
 math independent of the skill/bus layer.
 
-## Adding a new unit category
+## Adding a new unit category or language
 
-As of `0.0.2`, 18 of the 21 original categories are done (see README
+Unit aliases live in `locale/<lang>/unit_aliases.json`, NOT in
+`__init__.py` - see the module docstring there. This means a new
+*language* can be added by translating an existing `unit_aliases.json`
+without touching any Python: copy `locale/en-us/unit_aliases.json` to
+`locale/<new-lang>/unit_aliases.json`, translate the alias **keys**
+only (never the pint unit **values** - those are always in pint's own
+vocabulary), and validate the same way other locale content in this
+project is validated:
+```bash
+python -m ovos_localize.cli validate locale/<new-lang>
+```
+
+As of `0.0.3`, 18 of the 21 original categories are done (see README
 "Status"). What's left is Light (blocked on `pint` lacking foot-candle/
 phot units - would need custom unit definitions) and Custom (doesn't
 map onto a voice interface, likely permanently skipped).
 
 The process below is how the existing categories were built, and
 applies to any future one (a new Light approach, a category split more
-finely, etc):
+finely, a new language, etc):
 
 1. Pick the category and list the units you want spoken support for.
 2. **Verify every candidate pint unit string actually resolves**,
@@ -45,22 +57,25 @@ finely, etc):
        except Exception as e:
            print("FAIL", candidate, e)
    ```
-3. Draft the `UNIT_ALIASES["<category>"]["en-us"]` entry - spoken
-   forms (singular/plural/symbol) mapped to the verified pint string.
-4. Draft the Danish (`da-dk`) equivalent **as a structural translation,
-   not a literal one** - actively look for false-friend traps like the
-   ones in the README's table (Danish "ton"/"pund"/"hk" all needed
+3. Add the `"<category>": {...}` block to
+   `locale/en-us/unit_aliases.json` first - spoken forms
+   (singular/plural/symbol) mapped to the verified pint string.
+4. Add the Danish equivalent to `locale/da-dk/unit_aliases.json` **as a
+   structural translation, not a literal one** - actively look for
+   false-friend traps like the ones in the README's table and in that
+   file's own `"_notes"` key (Danish "ton"/"pund"/"hk" all needed
    different handling than a literal translation would give). A good
    check: does this Danish word's real-world value actually equal the
    English unit it superficially resembles? If unsure, omit it rather
    than guess - an omitted unit just doesn't work yet; a wrongly
    mapped one gives a confidently wrong answer.
 5. Check for **cross-category collisions** in the same language -
-   `_build_merged_aliases()` will raise at import time if two
-   categories claim the same alias with different meanings, but it's
-   worth deliberately checking short/symbol-like aliases (single
-   letters, common abbreviations) against every other category before
-   adding them, not just relying on the exception to catch it.
+   `_load_unit_aliases_from_disk()` will raise at import time if two
+   categories in the same file claim the same alias with different
+   meanings, but it's worth deliberately checking short/symbol-like
+   aliases (single letters, common abbreviations) against every other
+   category in the file before adding them, not just relying on the
+   exception to catch it.
 6. Add `test_resolve_unit_*` / `test_resolve_unit_across_categories`
    cases per language, and a `test_conversion.py` case for anything
    with a real numeric trap (offset units, two similarly-named but

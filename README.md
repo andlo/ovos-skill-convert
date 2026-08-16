@@ -58,15 +58,21 @@ power, torque, acceleration, concentration, computer, flow.
 - **Custom** - the original program's user-defined-unit tab. Doesn't
   map onto a voice interface.
 
-Every unit string in `UNIT_ALIASES` was checked against the installed
-`pint` registry before being added (see `DEVELOPMENT.md` for the
-verification method) - none of it is guessed.
+Every unit string in `locale/en-us/unit_aliases.json` was checked
+against the installed `pint` registry before being added (see
+`DEVELOPMENT.md` for the verification method) - none of it is guessed.
+
+Unit aliases live in `locale/<lang>/unit_aliases.json` per language,
+not hardcoded in Python - see "Adding a new unit category or language"
+in `DEVELOPMENT.md` for how to add a new language via the same
+`ovos-localize` workflow used for the rest of this project's locale
+content.
 
 ### False-friend traps found and handled
 
 A few unit names collide across languages/contexts with a *different*
-real-world value - each is called out with a comment at its definition
-in `__init__.py`:
+real-world value - each is called out in that language's
+`unit_aliases.json` `"_notes"` key:
 
 | Word | Wrong assumption | Correct handling |
 |---|---|---|

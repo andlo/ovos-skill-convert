@@ -1,0 +1,138 @@
+{
+  "_notes": [
+    "Danish-specific decisions worth knowing before editing this file:",
+    "- 'ton' is mapped to metric_ton (1000 kg), NOT pint's bare 'ton' (US short ton, 907 kg) - matches everyday Danish usage.",
+    "- 'pund' is NOT mapped at all - traditional Danish pund is exactly 500 g, not the imperial pound (453.6 g).",
+    "- 'mil' is NOT mapped - the Scandinavian mile (10 km) is not the English mile.",
+    "- 'hk'/'hestekraft' maps to metric_horsepower, NOT bare 'horsepower' (~1.4% different).",
+    "- bare 'grader' only means angle (degree), never temperature - 'celsius'/'fahrenheit'/'kelvin' must be said explicitly."
+  ],
+  "length": {
+    "centimeter": "cm",
+    "cm": "cm",
+    "millimeter": "mm",
+    "mm": "mm",
+    "meter": "m",
+    "m": "m",
+    "kilometer": "km",
+    "km": "km",
+    "tomme": "in",
+    "tommer": "in",
+    "fod": "ft",
+    "yard": "yd"
+  },
+  "mass": {
+    "gram": "g",
+    "g": "g",
+    "milligram": "mg",
+    "mg": "mg",
+    "kilogram": "kg",
+    "kilo": "kg",
+    "kg": "kg",
+    "ton": "metric_ton",
+    "tons": "metric_ton"
+  },
+  "temperature": {
+    "celsius": "degC",
+    "fahrenheit": "degF",
+    "kelvin": "kelvin"
+  },
+  "time": {
+    "sekund": "second",
+    "sekunder": "second",
+    "minut": "minute",
+    "minutter": "minute",
+    "time": "hour",
+    "timer": "hour",
+    "dag": "day",
+    "dage": "day",
+    "uge": "week",
+    "uger": "week",
+    "år": "year"
+  },
+  "speed": {
+    "meter per sekund": "m/s",
+    "meter i sekundet": "m/s",
+    "kilometer i timen": "km/h",
+    "kilometer per time": "km/h",
+    "knob": "knot"
+  },
+  "area": {
+    "kvadratmeter": "m**2",
+    "kvadratkilometer": "km**2",
+    "hektar": "hectare"
+  },
+  "volume": {
+    "liter": "liter",
+    "milliliter": "milliliter",
+    "deciliter": "deciliter",
+    "spiseske": "tablespoon",
+    "spiseskeer": "tablespoon",
+    "teske": "teaspoon",
+    "teskeer": "teaspoon"
+  },
+  "angle": {
+    "grad": "degree",
+    "grader": "degree",
+    "radian": "radian",
+    "radianer": "radian"
+  },
+  "density": {
+    "kilogram per kubikmeter": "kg/m**3",
+    "gram per kubikcentimeter": "g/cm**3",
+    "gram per milliliter": "g/mL"
+  },
+  "pressure": {
+    "pascal": "pascal",
+    "kilopascal": "kPa",
+    "bar": "bar",
+    "atmosfaere": "atm",
+    "atmosfære": "atm",
+    "atmosfærer": "atm"
+  },
+  "force": {
+    "newton": "newton"
+  },
+  "energy": {
+    "joule": "joule",
+    "kilojoule": "kilojoule",
+    "kalorie": "calorie",
+    "kalorier": "calorie",
+    "kilokalorie": "kilocalorie",
+    "kilokalorier": "kilocalorie",
+    "kilowatttime": "kilowatt_hour",
+    "kilowatt-time": "kilowatt_hour"
+  },
+  "power": {
+    "watt": "watt",
+    "kilowatt": "kilowatt",
+    "hestekraft": "metric_horsepower",
+    "hestekraefter": "metric_horsepower",
+    "hestekræfter": "metric_horsepower",
+    "hk": "metric_horsepower"
+  },
+  "torque": {
+    "newtonmeter": "newton*meter"
+  },
+  "acceleration": {
+    "meter per sekund i anden": "m/s**2",
+    "tyngdeacceleration": "standard_gravity"
+  },
+  "concentration": {
+    "mol per liter": "mol/L",
+    "milligram per deciliter": "mg/dL",
+    "procent": "percent"
+  },
+  "computer": {
+    "bit": "bit",
+    "byte": "byte",
+    "kilobyte": "kilobyte",
+    "megabyte": "megabyte",
+    "gigabyte": "gigabyte",
+    "terabyte": "terabyte"
+  },
+  "flow": {
+    "liter per minut": "liter/minute",
+    "kubikmeter per time": "m**3/hour"
+  }
+}
