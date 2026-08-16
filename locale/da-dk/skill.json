@@ -1,0 +1,21 @@
+{
+  "skill_id": "ovos-skill-convert.andlo",
+  "source": "https://github.com/andlo/ovos-skill-convert",
+  "package_name": "ovos-skill-convert",
+  "pip_spec": "ovos-skill-convert",
+  "license": "GPL-3.0-or-later",
+  "author": "andlo",
+  "name": "Enhedskonverter",
+  "description": "Lokal, offline enhedskonvertering - ingen cloud-afhængighed, ingen API-nøgle. Understøtter i øjeblikket kun længde/afstand; flere kategorier er planlagt.",
+  "examples": [
+    "konverter 10 centimeter til tommer",
+    "hvor mange fod er 2 meter"
+  ],
+  "tags": [
+    "utility",
+    "converter",
+    "units",
+    "measurement"
+  ],
+  "icon": "https://raw.githubusercontent.com/andlo/ovos-skill-convert/main/icon.png"
+}

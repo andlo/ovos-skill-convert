@@ -1,0 +1,2 @@
+Pint>=0.21
+ovos-number-parser

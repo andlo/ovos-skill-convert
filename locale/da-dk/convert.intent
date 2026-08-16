@@ -1,0 +1,5 @@
+konverter {value} {from_unit} til {to_unit}
+omregn {value} {from_unit} til {to_unit}
+hvor mange {to_unit} er {value} {from_unit}
+hvad er {value} {from_unit} i {to_unit}
+hvad svarer {value} {from_unit} til i {to_unit}
