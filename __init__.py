@@ -93,7 +93,7 @@ import time
 from pathlib import Path
 
 from ovos_workshop.skills import OVOSSkill
-from ovos_workshop.decorators import intent_handler
+from ovos_workshop.decorators import intent_handler, common_query
 from ovos_number_parser import extract_number
 from ovos_utils.parse import match_one
 
@@ -115,6 +115,39 @@ NUMBER_RE = re.compile(r"[-+]?\d[\d.,]*\d|[-+]?\d")
 
 SKILL_ROOT = Path(__file__).resolve().parent
 LOCALE_DIR = SKILL_ROOT / "locale"
+
+# ---------------------------------------------------------------
+# Common Query safety net - see ovos-skill-geometry/ovos-skill-
+# geography/ovos-skill-calculator's DEVELOPMENT.md for the live-
+# tested finding this addresses (a platform-level semantic router,
+# ovos-m2v-pipeline-high, can intercept a "what is X" utterance
+# before this skill's own Padatious intents get a chance). Only the
+# "what is {value} {from_unit} in {to_unit}" phrasing - the ONE line
+# per language in convert.intent that's actually shaped like a
+# question - not convert_last.intent's "what is that in X", which
+# depends on mutable per-instance state (self._last_quantity) that
+# could be stale or wrong during a Common Query race across skills,
+# and not the imperative "convert X to Y" phrasings, which aren't
+# question-shaped at all.
+#
+# Deliberately digit-only for the value (same NUMBER_RE convention
+# already used elsewhere in this file for the follow-up-conversion
+# scanner - see module docstring), and (prefix, connector) pairs
+# mirroring the EXACT "what is X in Y" line already present in each
+# language's own convert.intent - not a second implementation of
+# unit-conversion parsing, just a fallback entry point that then
+# calls the same self._resolve_unit()/pint conversion the regular
+# intent handler uses.
+CQ_CONVERT_PATTERNS = {
+    "en-us": [(re.compile(r"^what(?:'s| is) ([\d.,]+)\s+(.+?)\s+in\s+(.+)$", re.I))],
+    "da-dk": [(re.compile(r"^hvad er ([\d.,]+)\s+(.+?)\s+i\s+(.+)$", re.I))],
+    "de-de": [(re.compile(r"^was sind ([\d.,]+)\s+(.+?)\s+in\s+(.+)$", re.I))],
+    "es-es": [(re.compile(r"^qué son ([\d.,]+)\s+(.+?)\s+en\s+(.+)$", re.I))],
+    "fr-fr": [(re.compile(r"^qu'est-ce que ([\d.,]+)\s+(.+?)\s+en\s+(.+)$", re.I))],
+    "it-it": [(re.compile(r"^cosa sono ([\d.,]+)\s+(.+?)\s+in\s+(.+)$", re.I))],
+    "nl-nl": [(re.compile(r"^wat is ([\d.,]+)\s+(.+?)\s+in\s+(.+)$", re.I))],
+    "pt-pt": [(re.compile(r"^o que é ([\d.,]+)\s+(.+?)\s+em\s+(.+)$", re.I))],
+}
 
 
 def _load_unit_aliases_from_disk():
@@ -194,6 +227,34 @@ class UnitConverter(OVOSSkill):
         # section for why. add_event() (not raw self.bus.on()) so the
         # listener is cleaned up automatically on skill shutdown.
         self.add_event("speak", self.handle_speak_event)
+
+    @common_query()
+    def handle_common_query(self, phrase, lang):
+        """Safety net - see CQ_CONVERT_PATTERNS above. Resolves both
+        units and runs the SAME pint conversion _speak_conversion()
+        uses, just returning the number as a string instead of
+        speaking a dialog directly."""
+        lang = lang.lower()
+        patterns = CQ_CONVERT_PATTERNS.get(lang) or CQ_CONVERT_PATTERNS.get("en-us", [])
+        stripped = phrase.strip().rstrip("?").strip()
+        for pattern in patterns:
+            m = pattern.match(stripped)
+            if not m:
+                continue
+            value_raw, from_raw, to_raw = m.groups()
+            value = self._parse_localized_number(value_raw, lang)
+            if value is None:
+                return None
+            from_unit = self._resolve_unit(from_raw, lang)
+            to_unit = self._resolve_unit(to_raw, lang)
+            if not from_unit or not to_unit:
+                return None
+            try:
+                result = UREG.Quantity(value, from_unit).to(to_unit)
+            except Exception:
+                return None
+            return str(round(result.magnitude, 4)), 0.8
+        return None
 
     def _aliases_for(self, lang):
         lang = lang.lower()

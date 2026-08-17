@@ -143,17 +143,28 @@ raises an error at import time if any two categories ever define the
 same spoken alias with two *different* target units for the same
 language - so a future collision like these can't ship silently.
 
-## Architecture: why NOT Common Query
+## Architecture: mostly not Common Query
 
-This is a regular intent skill (padatious), not a Common Query
-provider. Common Query exists to pick the best answer among *multiple
-skills that might plausibly answer the same question* (e.g. "what's
-the capital of France"). Unit conversion has exactly one correct
-answer and no competing sources to arbitrate between - routing it
-through CQ would add latency and confidence-scoring machinery for a
-problem that's already fully deterministic. A plain intent match with
-structured slots (`value`, `from_unit`, `to_unit`) is the right tool
-here.
+This is primarily a regular intent skill (padatious), not a Common
+Query provider - Common Query exists to pick the best answer among
+*multiple skills that might plausibly answer the same question*, and
+unit conversion has exactly one correct answer with no competing
+sources to arbitrate between.
+
+A narrow Common Query safety net (`handle_common_query()`) exists
+alongside the intents anyway - live testing found that a platform-
+level semantic router (`ovos-m2v-pipeline-high`) can intercept a
+"what is X in Y"-shaped utterance before this skill's own Padatious
+intent gets a chance, on installations where pipeline confidence
+tuning differs from ours (see `ovos-skill-geometry`'s DEVELOPMENT.md
+for the full finding, filed upstream as
+[OpenVoiceOS/ovos-m2v-pipeline#68](https://github.com/OpenVoiceOS/ovos-m2v-pipeline/issues/68)).
+Deliberately narrow: only the "what is \{value\} \{from_unit\} in
+\{to_unit\}" phrasing (the one line per language actually shaped like
+a question) - not the imperative "convert X to Y" forms, and not the
+context-dependent "what is that in X" follow-up (which depends on
+mutable per-instance state that could be stale during a Common Query
+race).
 
 ## Unit resolution strategy
 
