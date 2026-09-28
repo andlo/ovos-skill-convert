@@ -1,4 +1,4 @@
-"""The {from_unit}/{to_unit} entity files must list exactly the unit
+"""The {to_unit} entity files must list exactly the unit
 words in unit_aliases.json - they are generated from it by
 scripts/make_unit_entities.py, and a stale copy would make Padatious
 unsure about any unit added since."""
@@ -17,7 +17,7 @@ spec.loader.exec_module(gen)
 
 
 @pytest.mark.parametrize("lang", LANGS)
-@pytest.mark.parametrize("name", ["from_unit", "to_unit"])
+@pytest.mark.parametrize("name", ["to_unit"])
 def test_entity_file_matches_unit_aliases(lang, name):
     path = LOCALE / lang / f"{name}.entity"
     assert path.is_file(), f"missing {path} - run python scripts/make_unit_entities.py"

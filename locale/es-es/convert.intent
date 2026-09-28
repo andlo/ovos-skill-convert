@@ -1,4 +1,4 @@
-convierte {value} {from_unit} a {to_unit}
-convierte {value} {from_unit} en {to_unit}
-cuántos {to_unit} son {value} {from_unit}
-qué son {value} {from_unit} en {to_unit}
+convierte {quantity} a {to_unit}
+convierte {quantity} en {to_unit}
+cuántos {to_unit} son {quantity}
+qué son {quantity} en {to_unit}
