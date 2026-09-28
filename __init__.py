@@ -122,7 +122,7 @@ LOCALE_DIR = SKILL_ROOT / "locale"
 # tested finding this addresses (a platform-level semantic router,
 # ovos-m2v-pipeline-high, can intercept a "what is X" utterance
 # before this skill's own Padatious intents get a chance). Only the
-# "what is {value} {from_unit} in {to_unit}" phrasing - the ONE line
+# "what is {quantity} in {to_unit}" phrasing - the ONE line
 # per language in convert.intent that's actually shaped like a
 # question - not convert_last.intent's "what is that in X", which
 # depends on mutable per-instance state (self._last_quantity) that
@@ -218,7 +218,7 @@ def _load_unit_aliases_from_disk():
 MERGED_UNIT_ALIASES, NEVER_MAP = _load_unit_aliases_from_disk()
 
 
-UNIT_ENTITIES = ("from_unit", "to_unit")
+UNIT_ENTITIES = ("to_unit",)
 
 
 class UnitConverter(OVOSSkill):
@@ -232,7 +232,7 @@ class UnitConverter(OVOSSkill):
         """Works around ovos-padatious <= 1.4.3 (the current stable
         release): before training it strips trailing punctuation from
         every sample with rstrip(string.punctuation) - and "}" is
-        punctuation. "convert {value} {from_unit} to {to_unit}" is
+        punctuation. "convert {quantity} to {to_unit}" is
         trained as "... to {to_unit", the slot is lost, and on a live
         install the skill never matches its own examples (conf 0.00 in
         a normalized container, 0.25 among ~200 other intents).
@@ -268,7 +268,7 @@ class UnitConverter(OVOSSkill):
         service.register_padatious_intent = register_padded
 
     def _register_unit_entities(self):
-        """Registers locale/<lang>/{from_unit,to_unit}.entity with
+        """Registers locale/<lang>/to_unit.entity with
         Padatious so it knows which words fill those slots - see
         scripts/make_unit_entities.py for why this matters.
 
@@ -278,7 +278,7 @@ class UnitConverter(OVOSSkill):
 
         Registered directly instead of via register_entity_file(): in
         ovos-workshop 7.x that names the entity "<skill_id>:<file>_<md5>",
-        and Padatious looks up "{from_unit}" as "<skill_id>:from_unit",
+        and Padatious looks up "{to_unit}" as "<skill_id>:to_unit",
         so an entity registered that way is never used."""
         base = Path(__file__).resolve().parent / "locale"
         for lang in self.native_langs:
@@ -364,6 +364,53 @@ class UnitConverter(OVOSSkill):
             return raw
         except Exception:
             return None
+
+    def _split_quantity(self, raw, lang):
+        """'10 centimeters' / 'ten square meters' / 'meters' -> (value, unit text).
+
+        The intents use one {quantity} slot, not '{value} {from_unit}':
+        ovos-workshop 9.x (the alpha channel) rejects templates with two
+        slots next to each other ("adjacent slots"), which dropped every
+        line of convert.intent there. So the skill splits it itself:
+
+        1. the longest trailing run of words that is exactly a known unit
+           alias ('square meters' before 'meters'); what comes before it
+           is the number, digits or spoken ('10', '10,5', 'ten', 'two and
+           a half');
+        2. otherwise a leading digit number, and the rest as the unit
+           (fuzzy-matched later by _resolve_unit, as before);
+        3. no number at all ('convert meters to feet') means 1.
+        """
+        text = (raw or "").strip().strip(".,!?;:").lower()
+        if not text:
+            return 1, ""
+        words = text.split()
+        aliases = self._aliases_for(lang)
+        for start in range(len(words)):
+            unit = " ".join(words[start:])
+            if unit not in aliases:
+                continue
+            number = " ".join(words[:start])
+            if not number:
+                return 1, unit
+            value = self._number_from_text(number, lang)
+            if value is not None:
+                return value, unit
+        m = re.match(r"^([-+]?\d[\d.,]*)\s*(.*)$", text)
+        if m:
+            value = self._parse_localized_number(m.group(1), lang)
+            if value is not None:
+                return value, m.group(2)
+        return 1, text
+
+    def _number_from_text(self, text, lang):
+        if NUMBER_RE.fullmatch(text):
+            return self._parse_localized_number(text, lang)
+        try:
+            value = extract_number(text, lang=lang)
+        except Exception:
+            return None
+        return None if value is False or value is None else value
 
     def _parse_localized_number(self, raw, lang):
         """Best-effort locale-aware parse of a digit-written number
@@ -454,13 +501,8 @@ class UnitConverter(OVOSSkill):
 
     @intent_handler("convert.intent")
     def handle_convert(self, message):
-        value_raw = message.data.get("value")
-        from_raw = message.data.get("from_unit")
         to_raw = message.data.get("to_unit")
-
-        value = extract_number(value_raw, lang=self.lang) if value_raw else None
-        if value is False or value is None:
-            value = 1
+        value, from_raw = self._split_quantity(message.data.get("quantity"), self.lang)
 
         from_unit = self._resolve_unit(from_raw, self.lang)
         to_unit = self._resolve_unit(to_raw, self.lang)

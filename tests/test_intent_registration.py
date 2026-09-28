@@ -52,4 +52,4 @@ def test_unit_entities_registered_under_the_name_padatious_looks_up(wired):
     skill._register_unit_entities()
     names = {(c.args[0], c.args[2]) for c in service.register_padatious_entity.call_args_list}
     assert names == {(f"{skill.skill_id}:{e}", lang)
-                     for e in ("from_unit", "to_unit") for lang in ("en-US", "da-DK")}
+                     for e in ("to_unit",) for lang in ("en-US", "da-DK")}

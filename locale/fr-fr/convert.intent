@@ -1,3 +1,3 @@
-convertis {value} {from_unit} en {to_unit}
-combien de {to_unit} font {value} {from_unit}
-qu'est-ce que {value} {from_unit} en {to_unit}
+convertis {quantity} en {to_unit}
+combien de {to_unit} font {quantity}
+qu'est-ce que {quantity} en {to_unit}

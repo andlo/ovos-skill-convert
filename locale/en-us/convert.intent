@@ -1,17 +1,17 @@
-convert {value} {from_unit} to {to_unit}
-convert {value} {from_unit} into {to_unit}
-convert {value} {from_unit} in {to_unit}
-change {value} {from_unit} to {to_unit}
-change {value} {from_unit} into {to_unit}
-turn {value} {from_unit} into {to_unit}
-how many {to_unit} is {value} {from_unit}
-how many {to_unit} are {value} {from_unit}
-how many {to_unit} are in {value} {from_unit}
-how many {to_unit} are there in {value} {from_unit}
-how many {to_unit} is there in {value} {from_unit}
-how much is {value} {from_unit} in {to_unit}
-what is {value} {from_unit} in {to_unit}
-what's {value} {from_unit} in {to_unit}
-what are {value} {from_unit} in {to_unit}
-{value} {from_unit} in {to_unit}
-{value} {from_unit} to {to_unit}
+convert {quantity} to {to_unit}
+convert {quantity} into {to_unit}
+convert {quantity} in {to_unit}
+change {quantity} to {to_unit}
+change {quantity} into {to_unit}
+turn {quantity} into {to_unit}
+how many {to_unit} is {quantity}
+how many {to_unit} are {quantity}
+how many {to_unit} are in {quantity}
+how many {to_unit} are there in {quantity}
+how many {to_unit} is there in {quantity}
+how much is {quantity} in {to_unit}
+what is {quantity} in {to_unit}
+what's {quantity} in {to_unit}
+what are {quantity} in {to_unit}
+{quantity} in {to_unit}
+{quantity} to {to_unit}

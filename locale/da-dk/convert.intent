@@ -1,13 +1,13 @@
-konverter {value} {from_unit} til {to_unit}
-omregn {value} {from_unit} til {to_unit}
-omsæt {value} {from_unit} til {to_unit}
-lav {value} {from_unit} om til {to_unit}
-regn {value} {from_unit} om til {to_unit}
-hvor mange {to_unit} er {value} {from_unit}
-hvor mange {to_unit} er der i {value} {from_unit}
-hvor mange {to_unit} svarer {value} {from_unit} til
-hvad er {value} {from_unit} i {to_unit}
-hvad er {value} {from_unit} omregnet til {to_unit}
-hvad svarer {value} {from_unit} til i {to_unit}
-{value} {from_unit} i {to_unit}
-{value} {from_unit} til {to_unit}
+konverter {quantity} til {to_unit}
+omregn {quantity} til {to_unit}
+omsæt {quantity} til {to_unit}
+lav {quantity} om til {to_unit}
+regn {quantity} om til {to_unit}
+hvor mange {to_unit} er {quantity}
+hvor mange {to_unit} er der i {quantity}
+hvor mange {to_unit} svarer {quantity} til
+hvad er {quantity} i {to_unit}
+hvad er {quantity} omregnet til {to_unit}
+hvad svarer {quantity} til i {to_unit}
+{quantity} i {to_unit}
+{quantity} til {to_unit}
