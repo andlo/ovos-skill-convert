@@ -218,7 +218,79 @@ def _load_unit_aliases_from_disk():
 MERGED_UNIT_ALIASES, NEVER_MAP = _load_unit_aliases_from_disk()
 
 
+UNIT_ENTITIES = ("from_unit", "to_unit")
+
+
 class UnitConverter(OVOSSkill):
+
+    def load_data_files(self, root_directory=None):
+        super().load_data_files(root_directory)
+        self._protect_slot_endings()
+        self._register_unit_entities()
+
+    def _protect_slot_endings(self):
+        """Works around ovos-padatious <= 1.4.3 (the current stable
+        release): before training it strips trailing punctuation from
+        every sample with rstrip(string.punctuation) - and "}" is
+        punctuation. "convert {value} {from_unit} to {to_unit}" is
+        trained as "... to {to_unit", the slot is lost, and on a live
+        install the skill never matches its own examples (conf 0.00 in
+        a normalized container, 0.25 among ~200 other intents).
+        Every line of convert.intent ends in a slot.
+
+        Fixed upstream in the ovos-padatious 2.x pre-releases (it
+        keeps {}<> now). Until that is what people run, lines ending
+        in a slot get " ?" appended: the "?" is what gets stripped,
+        the space stops the stripping, the brace survives. On a fixed
+        ovos-padatious the "?" is stripped the same way, so this is
+        harmless there.
+
+        Done by handing Padatious a padded copy of each .intent file
+        (in the skill's own data folder) - the files in locale/ stay
+        as translators know them."""
+        service = self.intent_service
+        original = service.register_padatious_intent
+        padded_root = Path(self.file_system.path) / "padatious_intents"
+
+        def register_padded(intent_name, filename, lang, string_blacklist=None):
+            try:
+                lines = Path(filename).read_text(encoding="utf-8").splitlines()
+                padded = [f"{line} ?" if line.rstrip().endswith("}") else line
+                          for line in (raw.rstrip() for raw in lines)]
+                target = padded_root / lang / Path(filename).name
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text("\n".join(padded) + "\n", encoding="utf-8")
+                filename = str(target)
+            except Exception as e:  # fall back to the original file
+                self.log.warning(f"could not pad {filename}: {e}")
+            return original(intent_name, filename, lang, string_blacklist)
+
+        service.register_padatious_intent = register_padded
+
+    def _register_unit_entities(self):
+        """Registers locale/<lang>/{from_unit,to_unit}.entity with
+        Padatious so it knows which words fill those slots - see
+        scripts/make_unit_entities.py for why this matters.
+
+        Done here, not in initialize(), because load_data_files() runs
+        just before the intent files are registered: the entities are
+        then in place when Padatious trains on the intents.
+
+        Registered directly instead of via register_entity_file(): in
+        ovos-workshop 7.x that names the entity "<skill_id>:<file>_<md5>",
+        and Padatious looks up "{from_unit}" as "<skill_id>:from_unit",
+        so an entity registered that way is never used."""
+        base = Path(__file__).resolve().parent / "locale"
+        for lang in self.native_langs:
+            for name in UNIT_ENTITIES:
+                path = base / lang.lower() / f"{name}.entity"
+                if not path.is_file():
+                    continue
+                try:
+                    self.intent_service.register_padatious_entity(
+                        f"{self.skill_id}:{name}", str(path), lang)
+                except Exception as e:  # never block the skill from loading
+                    self.log.warning(f"could not register {path}: {e}")
 
     def initialize(self):
         self._last_quantity = None  # {value, unit, raw_unit, lang, timestamp} | None
