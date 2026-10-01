@@ -1,0 +1,6 @@
+{"utterance": "convierte 10 metros a pulgada", "lang": "es-ES", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert"}
+{"utterance": "convierte 5 kilogramos en gramo", "lang": "es-ES", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert"}
+{"utterance": "cuántos fahrenheit son 100 grados celsius", "lang": "es-ES", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert"}
+{"utterance": "qué es eso en pulgada", "lang": "es-ES", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert_last"}
+{"utterance": "cuántos gramo son eso", "lang": "es-ES", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert_last"}
+{"utterance": "convíertelo a fahrenheit", "lang": "es-ES", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert_last"}

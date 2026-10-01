@@ -1,0 +1,6 @@
+{"utterance": "converte 10 metros para polegada", "lang": "pt-PT", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert"}
+{"utterance": "quantos grama são 5 quilogramas", "lang": "pt-PT", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert"}
+{"utterance": "o que é 100 graus celsius em fahrenheit", "lang": "pt-PT", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert"}
+{"utterance": "o que é isso em polegada", "lang": "pt-PT", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert_last"}
+{"utterance": "quantos grama são isso", "lang": "pt-PT", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert_last"}
+{"utterance": "converte isso para fahrenheit", "lang": "pt-PT", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert_last"}
