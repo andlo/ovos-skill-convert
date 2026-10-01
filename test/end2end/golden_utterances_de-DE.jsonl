@@ -1,0 +1,6 @@
+{"utterance": "konvertiere 10 meter in zoll", "lang": "de-DE", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert"}
+{"utterance": "wandle 5 kilogramm in gramm um", "lang": "de-DE", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert"}
+{"utterance": "wie viele fahrenheit sind 100 grad celsius", "lang": "de-DE", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert"}
+{"utterance": "was ist das in zoll", "lang": "de-DE", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert_last"}
+{"utterance": "wie viele gramm sind das", "lang": "de-DE", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert_last"}
+{"utterance": "wandle das in fahrenheit um", "lang": "de-DE", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert_last"}

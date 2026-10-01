@@ -507,11 +507,30 @@ class UnitConverter(OVOSSkill):
         from_unit = self._resolve_unit(from_raw, self.lang)
         to_unit = self._resolve_unit(to_raw, self.lang)
 
+        if self._means_last_quantity(message.data.get("quantity"), from_raw):
+            # "wie viele pfund sind das", "convertis ça en pieds": in several
+            # languages convert.intent's {quantity} also takes the "that" of a
+            # follow-up question, so padatious may pick this intent for it.
+            return self.handle_convert_last(message)
+
         if not from_unit or not to_unit:
             self.speak_dialog("unit_not_understood")
             return
 
         self._speak_conversion(value, from_unit, to_unit, from_raw, to_raw)
+
+    def _means_last_quantity(self, raw, unit_text):
+        """True when {quantity} holds no number and no unit word of this
+        language ("das", "ça", "qu'est-ce que c'est") while a recent
+        conversion is there to refer to. Checked against the language's own
+        unit words, not pint: pint reads "das" as decaseconds."""
+        if self._last_quantity is None or re.search(r"\d", raw or ""):
+            return False
+        if time.monotonic() - self._last_quantity["timestamp"] > CONTEXT_TTL_SECONDS:
+            return False
+        if self._number_from_text((raw or "").strip().lower(), self.lang) is not None:
+            return False
+        return (unit_text or "").strip().lower() not in self._aliases_for(self.lang)
 
     @intent_handler("convert_last.intent")
     def handle_convert_last(self, message):

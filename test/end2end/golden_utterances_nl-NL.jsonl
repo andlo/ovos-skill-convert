@@ -1,0 +1,6 @@
+{"utterance": "converteer 10 meter naar inch", "lang": "nl-NL", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert"}
+{"utterance": "hoeveel gram is 5 kilogram", "lang": "nl-NL", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert"}
+{"utterance": "wat is 100 graden celsius in fahrenheit", "lang": "nl-NL", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert"}
+{"utterance": "wat is dat in inch", "lang": "nl-NL", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert_last"}
+{"utterance": "hoeveel gram is dat", "lang": "nl-NL", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert_last"}
+{"utterance": "converteer dat naar fahrenheit", "lang": "nl-NL", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert_last"}

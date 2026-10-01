@@ -1,0 +1,6 @@
+{"utterance": "convertis 10 mètres en pouce", "lang": "fr-FR", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert"}
+{"utterance": "combien de gramme font 5 kilogrammes", "lang": "fr-FR", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert"}
+{"utterance": "qu'est-ce que 100 degrés celsius en fahrenheit", "lang": "fr-FR", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert"}
+{"utterance": "qu'est-ce que c'est en pouce", "lang": "fr-FR", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert_last"}
+{"utterance": "combien de gramme ça fait", "lang": "fr-FR", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert_last"}
+{"utterance": "convertis ça en fahrenheit", "lang": "fr-FR", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert_last"}

@@ -1,0 +1,6 @@
+{"utterance": "converti 10 metri in pollice", "lang": "it-IT", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert"}
+{"utterance": "quanti grammo sono 5 chilogrammi", "lang": "it-IT", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert"}
+{"utterance": "cosa sono 100 gradi celsius in fahrenheit", "lang": "it-IT", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert"}
+{"utterance": "cos'è in pollice", "lang": "it-IT", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert_last"}
+{"utterance": "quanti grammo sono", "lang": "it-IT", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert_last"}
+{"utterance": "convertilo in fahrenheit", "lang": "it-IT", "skill_id": "ovos-skill-convert.andlo", "intent_label": "convert_last"}
