@@ -13,5 +13,3 @@ how much is {quantity} in {to_unit}
 what is {quantity} in {to_unit}
 what's {quantity} in {to_unit}
 what are {quantity} in {to_unit}
-{quantity} in {to_unit}
-{quantity} to {to_unit}

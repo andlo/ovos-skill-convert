@@ -9,5 +9,3 @@ hvor mange {to_unit} svarer {quantity} til
 hvad er {quantity} i {to_unit}
 hvad er {quantity} omregnet til {to_unit}
 hvad svarer {quantity} til i {to_unit}
-{quantity} i {to_unit}
-{quantity} til {to_unit}
