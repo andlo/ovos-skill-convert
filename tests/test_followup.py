@@ -51,16 +51,23 @@ def test_own_conversion_result_dialog_is_itself_scannable(skill):
     assert found == (0.1, "m", "meters")
 
 
-def test_parse_localized_number_english_thousands_comma(skill):
-    assert skill._parse_localized_number("52,000", "en-us") == 52000.0
+@pytest.mark.parametrize("raw,lang,expected", [
+    ("52,000", "en-us", 52000.0),
+    ("52.000", "da-dk", 52000.0),
+    ("1,5", "da-dk", 1.5),
+    ("10,5", "de-de", 10.5),
+    ("10,5", "fr-fr", 10.5),
+    ("1,5", "nl-nl", 1.5),
+])
+def test_read_number_in_the_language_notation(raw, lang, expected):
+    assert _module._read_number(raw, lang) == expected
 
 
-def test_parse_localized_number_danish_thousands_period(skill):
-    assert skill._parse_localized_number("52.000", "da-dk") == 52000.0
-
-
-def test_parse_localized_number_danish_decimal_comma(skill):
-    assert skill._parse_localized_number("1,5", "da-dk") == 1.5
+def test_own_danish_result_with_a_decimal_point_is_scannable(skill):
+    """The skill speaks Python's own '0.1' even in Danish; that must
+    not be read as 1 ('0.1' with the period as a thousands mark)."""
+    found = skill._find_last_quantity_in_text("10 centimeter er 0.1 meter", "da-dk")
+    assert found == (0.1, "m", "meter")
 
 
 def test_handle_speak_event_stores_context(skill):

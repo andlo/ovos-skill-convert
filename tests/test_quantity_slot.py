@@ -27,6 +27,9 @@ def test_no_intent_line_has_two_slots_next_to_each_other(path):
     ("meters", "en-us", (1, "meters")),
     ("10,5 meter", "da-dk", (10.5, "meter")),
     ("ti centimeter", "da-dk", (10, "centimeter")),
+    ("10,5 Meter", "de-de", (10.5, "meter")),
+    ("halvanden meter", "da-dk", (1.5, "meter")),
+    ("deux et demi mètres", "fr-fr", (2.5, "mètres")),
 ])
 def test_split_quantity(skill, raw, lang, expected):
     value, unit = skill._split_quantity(raw, lang)

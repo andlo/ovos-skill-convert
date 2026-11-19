@@ -48,3 +48,21 @@ def test_common_query_does_not_match_imperative_convert_phrasing(skill):
     """'convert X to Y' isn't question-shaped, so it's not a
     plausible misrouting target and isn't covered."""
     assert skill.handle_common_query("convert 2 meters to inches", "en-us") is None
+
+
+def test_common_query_spoken_number(skill):
+    answer, confidence = skill.handle_common_query("what is two meters in inches", "en-us")
+    assert float(answer) == 78.7402
+
+
+def test_common_query_danish_decimal_comma(skill):
+    answer, confidence = skill.handle_common_query("hvad er 2,5 meter i centimeter", "da-dk")
+    assert float(answer) == 250
+
+
+def test_common_query_needs_a_real_number(skill):
+    """A question with no number, or only a lone article or a word like
+    'second', is not a conversion."""
+    assert skill.handle_common_query("what is the weather in london", "en-us") is None
+    assert skill.handle_common_query("hvad er en meter i tommer", "da-dk") is None
+    assert skill.handle_common_query("what is a second in minutes", "en-us") is None
