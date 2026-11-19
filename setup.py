@@ -72,7 +72,7 @@ setup(
     author="Andreas Lorensen",
     author_email="andlo@outlook.dk",
     license="Apache-2.0",
-    python_requires=">=3.9",
+    python_requires=">=3.11",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
         "Intended Audience :: End Users/Desktop",

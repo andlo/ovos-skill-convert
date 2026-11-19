@@ -2,9 +2,10 @@
 skill OVOS Unit Converter
 
 Local, fully offline unit converter skill - no cloud dependency, no API
-key. Uses `pint` for the actual conversion math and
-`ovos-number-parser` to pull the numeric value out of the spoken
-utterance.
+key. Uses `pint` for the actual conversion math and `numtag` to read
+the numeric value out of the spoken utterance - digits in the
+language's own notation ("10,5" in Danish and German, "10.5" in
+English) as well as spoken numbers ("ten", "two and a half").
 
 UNIT ALIASES LIVE IN locale/<lang>/unit_aliases.json, NOT HERE
 -----------------------------------------------------------------
@@ -57,12 +58,13 @@ engineered for a heuristic feature:
 - Only digit-written numbers are found (e.g. "52,000"), not spelled-
   out words - this matches how OVOS dialog rendering normally emits
   numbers (TTS verbalizes digits into speech downstream, the bus
-  message text itself keeps them as digits).
+  message text itself keeps them as digits), and keeps a word like
+  "one" in ordinary speech from becoming a remembered quantity.
 - Scientific notation ("7.3\u00d710\u00b2\u00b2") is not recognized.
-- Thousands/decimal separator convention is guessed from the message's
-  language tag (comma-decimal for da-dk, period-decimal otherwise) -
-  wrong if a skill emits numbers in a different convention than its
-  own declared language.
+- Digits are read by numtag in the message language's own notation
+  ("52.000" and "0,1" in Danish, "52,000" and "0.1" in English); a
+  shape that only fits the other notation ("0.1" in a Danish
+  sentence) is still read as the decimal it is.
 - If a sentence has multiple recognizable (number, unit) pairs, the
   LAST one is remembered - e.g. "the Moon is 384,400 km away and
   weighs 7.3e22 kg" would remember the kg figure (the scientific-
@@ -74,11 +76,12 @@ engineered for a heuristic feature:
 import json
 import re
 import time
+from fractions import Fraction
 from pathlib import Path
 
+from numtag import Form, Reason, UnsupportedLanguageError, tag_numbers
 from ovos_workshop.skills import OVOSSkill
 from ovos_workshop.decorators import intent_handler, common_query
-from ovos_number_parser import extract_number
 from ovos_utils.parse import match_one
 
 import pint
@@ -94,8 +97,6 @@ UREG.define("foot_candle = lumen / foot ** 2 = fc")
 UNIT_MATCH_THRESHOLD = 0.8
 CONTEXT_TTL_SECONDS = 60
 CONTEXT_MAX_UNIT_WORDS = 4  # longest multi-word alias we try matching after a number
-
-NUMBER_RE = re.compile(r"[-+]?\d[\d.,]*\d|[-+]?\d")
 
 SKILL_ROOT = Path(__file__).resolve().parent
 LOCALE_DIR = SKILL_ROOT / "locale"
@@ -114,24 +115,48 @@ LOCALE_DIR = SKILL_ROOT / "locale"
 # and not the imperative "convert X to Y" phrasings, which aren't
 # question-shaped at all.
 #
-# Deliberately digit-only for the value (same NUMBER_RE convention
-# already used elsewhere in this file for the follow-up-conversion
-# scanner - see module docstring), and (prefix, connector) pairs
-# mirroring the EXACT "what is X in Y" line already present in each
-# language's own convert.intent - not a second implementation of
-# unit-conversion parsing, just a fallback entry point that then
-# calls the same self._resolve_unit()/pint conversion the regular
-# intent handler uses.
+# The quantity must hold a real number (digits or spoken, read by
+# numtag; a lone article or a word like "second" does not count), and
+# (prefix, connector) pairs mirror the EXACT "what is X in Y" line
+# already present in each language's own convert.intent - not a
+# second implementation of unit-conversion parsing, just a fallback
+# entry point that then calls the same _split_quantity()/
+# _resolve_unit()/pint conversion the regular intent handler uses.
 CQ_CONVERT_PATTERNS = {
-    "en-us": [(re.compile(r"^what(?:'s| is) ([\d.,]+)\s+(.+?)\s+in\s+(.+)$", re.I))],
-    "da-dk": [(re.compile(r"^hvad er ([\d.,]+)\s+(.+?)\s+i\s+(.+)$", re.I))],
-    "de-de": [(re.compile(r"^was sind ([\d.,]+)\s+(.+?)\s+in\s+(.+)$", re.I))],
-    "es-es": [(re.compile(r"^qué son ([\d.,]+)\s+(.+?)\s+en\s+(.+)$", re.I))],
-    "fr-fr": [(re.compile(r"^qu'est-ce que ([\d.,]+)\s+(.+?)\s+en\s+(.+)$", re.I))],
-    "it-it": [(re.compile(r"^cosa sono ([\d.,]+)\s+(.+?)\s+in\s+(.+)$", re.I))],
-    "nl-nl": [(re.compile(r"^wat is ([\d.,]+)\s+(.+?)\s+in\s+(.+)$", re.I))],
-    "pt-pt": [(re.compile(r"^o que é ([\d.,]+)\s+(.+?)\s+em\s+(.+)$", re.I))],
+    "en-us": [(re.compile(r"^what(?:'s| is) (.+?)\s+in\s+(.+)$", re.I))],
+    "da-dk": [(re.compile(r"^hvad er (.+?)\s+i\s+(.+)$", re.I))],
+    "de-de": [(re.compile(r"^was sind (.+?)\s+in\s+(.+)$", re.I))],
+    "es-es": [(re.compile(r"^qué son (.+?)\s+en\s+(.+)$", re.I))],
+    "fr-fr": [(re.compile(r"^qu'est-ce que (.+?)\s+en\s+(.+)$", re.I))],
+    "it-it": [(re.compile(r"^cosa sono (.+?)\s+in\s+(.+)$", re.I))],
+    "nl-nl": [(re.compile(r"^wat is (.+?)\s+in\s+(.+)$", re.I))],
+    "pt-pt": [(re.compile(r"^o que é (.+?)\s+em\s+(.+)$", re.I))],
 }
+
+
+def _numbers(text, lang):
+    """Every number numtag finds in text, or none for a language it has
+    no lexicon for."""
+    try:
+        return tag_numbers(text, lang)
+    except UnsupportedLanguageError:
+        return []
+
+
+def _is_real_number(mention):
+    """Not a lone article ("en", "un") and not a word that is also a
+    common word ("second", "segundo", "i anden")."""
+    return not (mention.reasons & {Reason.ARTICLE, Reason.HOMOGRAPH})
+
+
+def _read_number(text, lang):
+    """The value of text when all of it is one number, as a float, or
+    None. A lone article ("en", "one") is the number 1 here."""
+    text = (text or "").strip()
+    mentions = _numbers(text, lang)
+    if len(mentions) == 1 and mentions[0].char_span == (0, len(text)):
+        return float(Fraction(mentions[0].value))
+    return None
 
 
 def _load_unit_aliases_from_disk():
@@ -297,10 +322,10 @@ class UnitConverter(OVOSSkill):
             m = pattern.match(stripped)
             if not m:
                 continue
-            value_raw, from_raw, to_raw = m.groups()
-            value = self._parse_localized_number(value_raw, lang)
-            if value is None:
+            quantity_raw, to_raw = m.groups()
+            if not any(_is_real_number(n) for n in _numbers(quantity_raw, lang)):
                 return None
+            value, from_raw = self._split_quantity(quantity_raw, lang)
             from_unit = self._resolve_unit(from_raw, lang)
             to_unit = self._resolve_unit(to_raw, lang)
             if not from_unit or not to_unit:
@@ -361,7 +386,7 @@ class UnitConverter(OVOSSkill):
            alias ('square meters' before 'meters'); what comes before it
            is the number, digits or spoken ('10', '10,5', 'ten', 'two and
            a half');
-        2. otherwise a leading digit number, and the rest as the unit
+        2. otherwise a leading number (numtag), and the rest as the unit
            (fuzzy-matched later by _resolve_unit, as before);
         3. no number at all ('convert meters to feet') means 1.
         """
@@ -377,41 +402,13 @@ class UnitConverter(OVOSSkill):
             number = " ".join(words[:start])
             if not number:
                 return 1, unit
-            value = self._number_from_text(number, lang)
+            value = _read_number(number, lang)
             if value is not None:
                 return value, unit
-        m = re.match(r"^([-+]?\d[\d.,]*)\s*(.*)$", text)
-        if m:
-            value = self._parse_localized_number(m.group(1), lang)
-            if value is not None:
-                return value, m.group(2)
+        mentions = _numbers(text, lang)
+        if mentions and mentions[0].char_span[0] == 0 and _is_real_number(mentions[0]):
+            return float(Fraction(mentions[0].value)), text[mentions[0].char_span[1]:].strip()
         return 1, text
-
-    def _number_from_text(self, text, lang):
-        if NUMBER_RE.fullmatch(text):
-            return self._parse_localized_number(text, lang)
-        try:
-            value = extract_number(text, lang=lang)
-        except Exception:
-            return None
-        return None if value is False or value is None else value
-
-    def _parse_localized_number(self, raw, lang):
-        """Best-effort locale-aware parse of a digit-written number
-        found by NUMBER_RE. da-dk uses '.' as thousands separator and
-        ',' as decimal; en-us (and the fallback for everything else)
-        is the reverse. Wrong if a skill emits numbers in a different
-        convention than its declared language, but that's a pre-
-        existing risk of this being a heuristic feature at all - see
-        module docstring."""
-        if lang.lower().startswith("da"):
-            cleaned = raw.replace(".", "").replace(",", ".")
-        else:
-            cleaned = raw.replace(",", "")
-        try:
-            return float(cleaned)
-        except ValueError:
-            return None
 
     def _find_last_quantity_in_text(self, text, lang):
         """Scans text for every (number, unit) pair - a digit number
@@ -423,11 +420,11 @@ class UnitConverter(OVOSSkill):
         positives rare."""
         aliases = self._aliases_for(lang)
         result = None
-        for m in NUMBER_RE.finditer(text):
-            value = self._parse_localized_number(m.group(), lang)
-            if value is None:
+        for m in _numbers(text, lang):
+            if m.form is not Form.DIGITS:
                 continue
-            after_words = text[m.end():].strip().split()
+            value = float(Fraction(m.value))
+            after_words = text[m.char_span[1]:].strip().split()
             for window in range(min(CONTEXT_MAX_UNIT_WORDS, len(after_words)), 0, -1):
                 candidate = " ".join(after_words[:window]).strip(".,!?;:\u00bb\u00ab\"'").lower()
                 if candidate in aliases:
@@ -512,7 +509,7 @@ class UnitConverter(OVOSSkill):
             return False
         if time.monotonic() - self._last_quantity["timestamp"] > CONTEXT_TTL_SECONDS:
             return False
-        if self._number_from_text((raw or "").strip().lower(), self.lang) is not None:
+        if _read_number((raw or "").lower(), self.lang) is not None:
             return False
         return (unit_text or "").strip().lower() not in self._aliases_for(self.lang)
 

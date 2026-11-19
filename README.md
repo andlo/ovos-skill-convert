@@ -2,8 +2,8 @@
 
 A local, fully offline unit converter skill for OVOS - no cloud
 dependency, no API key. Conversion math is done with
-[pint](https://pint.readthedocs.io/), spoken numbers are parsed with
-[ovos-number-parser](https://github.com/OpenVoiceOS/ovos-number-parser).
+[pint](https://pint.readthedocs.io/), numbers (digits in the language's own notation, and spoken numbers) are
+read with [numtag](https://github.com/TigreGotico/numtag).
 
 [![Tests](https://github.com/andlo/ovos-skill-convert/actions/workflows/test.yml/badge.svg)](https://github.com/andlo/ovos-skill-convert/actions/workflows/test.yml)
 [![PyPI version](https://img.shields.io/pypi/v/ovos-skill-convert.svg)](https://pypi.org/project/ovos-skill-convert/)
