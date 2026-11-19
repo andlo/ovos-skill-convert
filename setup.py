@@ -71,7 +71,7 @@ setup(
     },
     author="Andreas Lorensen",
     author_email="andlo@outlook.dk",
-    license="GPL-3.0-or-later",
+    license="Apache-2.0",
     python_requires=">=3.9",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",

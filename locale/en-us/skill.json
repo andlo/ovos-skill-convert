@@ -3,7 +3,7 @@
   "source": "https://github.com/andlo/ovos-skill-convert",
   "package_name": "ovos-skill-convert",
   "pip_spec": "ovos-skill-convert",
-  "license": "GPL-3.0-or-later",
+  "license": "Apache-2.0",
   "author": "andlo",
   "name": "Unit Converter",
   "description": "Local, offline unit conversion - no cloud dependency, no API key. Covers length, mass, temperature, time, speed, area, volume, angle, density, pressure, force, energy, power, torque, acceleration, concentration, computer, and flow.",

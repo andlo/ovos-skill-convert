@@ -3,7 +3,7 @@
   "source": "https://github.com/andlo/ovos-skill-convert",
   "package_name": "ovos-skill-convert",
   "pip_spec": "ovos-skill-convert",
-  "license": "GPL-3.0-or-later",
+  "license": "Apache-2.0",
   "author": "andlo",
   "name": "Enhedskonverter",
   "description": "Lokal, offline enhedskonvertering - ingen cloud-afhængighed, ingen API-nøgle. Dækker længde, masse, temperatur, tid, hastighed, areal, volumen, vinkel, densitet, tryk, kraft, energi, effekt, moment, acceleration, koncentration, computer og flow.",

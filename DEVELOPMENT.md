@@ -174,7 +174,7 @@ docker build -t ovos-skill-convert:dev .
 
 ## Style / conventions
 
-- License: GPL-3.0-or-later (matches the other `andlo` skill repos).
+- License: Apache-2.0 (matches the other `andlo` skill repos).
 - `locale/<lang-code>/` layout, not the old `dialog/vocab/<lang-code>/`
   layout.
 - `skill.json` lives inside each `locale/<lang>/` folder, one per

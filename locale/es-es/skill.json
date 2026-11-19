@@ -3,7 +3,7 @@
   "source": "https://github.com/andlo/ovos-skill-convert",
   "package_name": "ovos-skill-convert",
   "pip_spec": "ovos-skill-convert",
-  "license": "GPL-3.0-or-later",
+  "license": "Apache-2.0",
   "author": "andlo",
   "name": "Conversor de unidades",
   "description": "Conversión de unidades local y offline - sin dependencia de la nube, sin clave de API. Primer borrador con traducción automática, aún no verificado por un hablante nativo.",
